@@ -1,3 +1,4 @@
+import Router from "next/router"
 import { useState } from "react"
 import { Col, Container, Row, Button } from "react-bootstrap"
 import Search from "../components/homepage/SearchBar"
@@ -8,7 +9,8 @@ const Home = () => {
 
   const doSearch = () => {
     if (search !== "") {
-
+      // Make sure guy exists in db
+      Router.push(`/${search}`)
     }
   }
 
@@ -26,7 +28,7 @@ const Home = () => {
               <Search value={search} onChange={setSearch} />
             </Col>
             <Col md={1}>
-              <Button variant="success" href={`/${search}`}>
+              <Button variant="success" onClick={doSearch}>
                 Search
               </Button>
             </Col>
