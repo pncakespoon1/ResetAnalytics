@@ -5,6 +5,7 @@ const Search = (props) => {
   return (
     <Fragment>
       <Form.Control
+        style={{fontSize: "3vh"}}
         type="text"
         id="searchBar"
         aria-describedby="searchBarText"
