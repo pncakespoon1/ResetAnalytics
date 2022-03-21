@@ -1,4 +1,7 @@
 import Document, { Html, Head, Main, NextScript } from "next/document";
+import { Container } from "react-bootstrap"
+import Layout from "../components/Layout"
+import Footer from "../components/footer"
 
 export default class MainDocument extends Document {
   render() {
@@ -19,8 +22,15 @@ export default class MainDocument extends Document {
           <link href="https://fonts.googleapis.com/css2?family=VT323&display=swap" rel="stylesheet" /> 
         </Head>
         <body>
-          <Main />
-          <NextScript />
+          <Layout style={{"fontFamily": "VT323"}}>
+            <div className="jumbotron d-flex align-items-center" style={{minHeight: "100vh"}}>
+              <Container>
+                <Main />
+                <NextScript />
+                <Footer />
+              </Container>
+            </div>
+          </Layout>
         </body>
       </Html>
     );
