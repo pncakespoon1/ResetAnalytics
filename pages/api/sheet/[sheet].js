@@ -1,6 +1,8 @@
-import { splitIntoSessions, avgTimelines, resetCount } from "../../../public/helpers/dataOperations"
+import { splitIntoSessions, avgTimelines, resetCount, totalPlaytime, nethersPerHour } from "../../../public/helpers/dataOperations"
 
 const reader = require("g-sheets-api");
+
+const operations = {"tl": avgTimelines, "rc": resetCount, "tp": totalPlaytime, "nph": nethersPerHour}
 
 export default function handler(req, res) {
   const readerOptions = {
@@ -17,10 +19,20 @@ export default function handler(req, res) {
         return resolve()
       }
       // Do some operations
+      const sessionOps = []
+      const overallOps = {}
       const sessions = splitIntoSessions(data)
-      sessions.forEach(session => console.log(resetCount(session.entries)))
-      console.log(resetCount(data))
-      res.status(200).json({success: true})
+      sessions.forEach(session => {
+        const currSessionOps = {}
+        for (const op in operations) {
+          currSessionOps[op] = (operations[op](session.entries))
+        }
+        sessionOps.push({time: session.time, ops: currSessionOps})
+      })
+      for (const op in operations) {
+        overallOps[op] = operations[op](data)
+      }
+      res.status(200).json({success: true, session: sessionOps, overall: overallOps})
     }, err => {
       console.log(err)
       res.status(400).json({success: false})

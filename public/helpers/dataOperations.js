@@ -1,11 +1,15 @@
 // Wants:
-// Nethers per hour
 // Graph session stats over time 
 
 const timelines = ["Wood", "Iron Pickaxe", "Nether", "Bastion", "Fortress", "Nether Exit", "Stronghold", "End"]
 
 const hmsToMs = (h, m, s) => h * 60 * 60 * 1000 + m * 60 * 1000 + s * 1000
 const timeToMs = time => time.length > 0 ? hmsToMs(...time.split(":")) : 0
+
+// Nethers per hour
+export const nethersPerHour = data => {
+  return 10.6
+}
 
 // Total Playtime
 export const totalPlaytime = data => data.reduce((total, curr) => {
