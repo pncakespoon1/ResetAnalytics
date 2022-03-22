@@ -1,7 +1,7 @@
 import { useRouter } from 'next/router'
 import { Spinner} from 'react-bootstrap'
 import useSWR from "swr"
-import OverallStats from '../components/user/OverallStats';
+import OverallStats from '../../components/user/OverallStats';
 
 const fetcher = url => fetch(url).then((res) => res.json());
 

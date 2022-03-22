@@ -16,7 +16,7 @@ const Home = () => {
         .then(res => res.json())
         .then(res => {
           if (res.sheetId.length > 0)
-            Router.push(`/${res.sheetId}`)
+            Router.push(`/sheet/${res.sheetId}`)
           else
             setShowModal(true)
         })
