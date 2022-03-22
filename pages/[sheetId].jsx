@@ -13,10 +13,10 @@ const UserView = () => {
 
   if (error) return "An error has occurred."
   if (!data) return <Spinner animation="border" style={{minHeight: "2em", minWidth: "2em", fontSize: "2em"}} />
-  if (!data.success) return <h1>Invalid sheet...</h1>
+  if (!data.success) return <h1>Invalid sheet :(</h1>
   console.log(data)
   return (
-    <h1>Good sheet</h1>
+    <h1>Good sheet :)</h1>
   )
 }
 
