@@ -1,11 +1,16 @@
 // Wants:
 // Nethers per hour
-// Total Playtime
 // Graph session stats over time 
 
 const timelines = ["Wood", "Iron Pickaxe", "Nether", "Bastion", "Fortress", "Nether Exit", "Stronghold", "End"]
 
 const hmsToMs = (h, m, s) => h * 60 * 60 * 1000 + m * 60 * 1000 + s * 1000
+const timeToMs = time => time.length > 0 ? hmsToMs(...time.split(":")) : 0
+
+// Total Playtime
+export const totalPlaytime = data => data.reduce((total, curr) => {
+  return total + timeToMs(curr["RTA Since Prev"]) + timeToMs(curr["RTA"])
+}, 0)
 
 // Reset count
 export const resetCount = data => data.reduce((total, curr) => {
@@ -21,9 +26,8 @@ export const avgTimelines = data => {
       if (item[tItem].length > 0) {
         if (!currTimeline.hasOwnProperty(tItem))
           currTimeline[tItem] = {total: 0, sum: 0}
-        const [h, m, s] = item[tItem].split(":")
         currTimeline[tItem].total += 1
-        currTimeline[tItem].sum += item[tItem].length > 0 ? hmsToMs(h, m, s) : 0
+        currTimeline[tItem].sum += timeToMs(item[tItem])
       }
     })
   })
