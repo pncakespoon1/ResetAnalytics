@@ -9,7 +9,7 @@ const fetcher = url => fetch(url).then((res) => res.json());
 const UserView = () => {
   const router = useRouter()
   const { sheetId } = router.query
-  const { data, error } = useSWR(`/api/sheet/${sheetId}`, fetcher);
+  const { data, error } = useSWR(sheetId ? `/api/sheet/${sheetId}` : null, fetcher);
 
   if (error) return "An error has occurred."
   if (!data) return <Spinner animation="border" style={{minHeight: "2em", minWidth: "2em", fontSize: "2em"}} />
