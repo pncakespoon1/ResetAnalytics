@@ -1,8 +1,7 @@
 import { useRouter } from 'next/router'
-import { Spinner, Row, Col, Container } from 'react-bootstrap'
+import { Spinner} from 'react-bootstrap'
 import useSWR from "swr"
-
-import Footer from "../components/footer"
+import OverallStats from '../components/user/OverallStats';
 
 const fetcher = url => fetch(url).then((res) => res.json());
 
@@ -16,7 +15,10 @@ const UserView = () => {
   if (!data.success) return <h1>Invalid sheet :(</h1>
   console.log(data)
   return (
-    <h1>Good sheet :)</h1>
+    <>
+      <h1 className="display-2">Lifetime Stats</h1>
+      <OverallStats overall={data.overall} />
+    </>
   )
 }
 

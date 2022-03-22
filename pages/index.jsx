@@ -2,7 +2,6 @@ import Router from "next/router"
 import { useState } from "react"
 import { Col, Row, Button } from "react-bootstrap"
 
-import Footer from "../components/footer"
 import BadSearchModal from "../components/homepage/BadSearchModal"
 import Search from "../components/homepage/SearchBar"
 

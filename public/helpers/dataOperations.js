@@ -36,12 +36,12 @@ export const avgTimelines = data => {
     })
   })
   // Average out all the data
-  const finalTimeline = {}
+  const finalTimeline = []
   timelines.forEach(tItem => {
     if (!currTimeline.hasOwnProperty(tItem))
-      finalTimeline[tItem] = 0
+      finalTimeline.push({time: 0, total: 0})
     else
-      finalTimeline[tItem] = currTimeline[tItem].sum / currTimeline[tItem].total
+      finalTimeline.push({time: currTimeline[tItem].sum / currTimeline[tItem].total, total: currTimeline[tItem].total})
   })
   return finalTimeline
 }
