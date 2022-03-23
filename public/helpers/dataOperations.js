@@ -30,8 +30,21 @@ export const avgTimelines = data => {
       if (item[tItem].length > 0) {
         if (!currTimeline.hasOwnProperty(tItem))
           currTimeline[tItem] = {total: 0, sum: 0}
-        currTimeline[tItem].total += 1
-        currTimeline[tItem].sum += timeToMs(item[tItem])
+        // Do structure 1, structure 2
+        if (tItem === "Bastion" || (tItem === "Fortress" && item["Bastion"].length === 0)) {
+          if (!currTimeline.hasOwnProperty("Fortress"))
+            currTimeline["Fortress"] = {total: 0, sum: 0}
+          const bastTime = timeToMs(item["Bastion"])
+          const fortTime = timeToMs(item["Fortress"])
+          // Bastion = structure 1 data, Fortress = structure 2 data
+          currTimeline["Bastion"].total += bastTime > 0 || fortTime > bastTime
+          currTimeline["Fortress"].total += fortTime > 0 && bastTime > 0
+          currTimeline["Bastion"].sum += fortTime > bastTime ? fortTime : bastTime
+          currTimeline["Fortress"].sum += fortTime > bastTime ? bastTime : fortTime
+        } else if (tItem != "Fortress") {
+          currTimeline[tItem].total += 1
+          currTimeline[tItem].sum += timeToMs(item[tItem])
+        }
       }
     })
   })

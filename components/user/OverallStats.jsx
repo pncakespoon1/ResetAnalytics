@@ -9,8 +9,8 @@ const OverallStats = ({ overall }) => {
           <th>Wood</th>
           <th>Iron Pickaxe</th>
           <th>Nether</th>
-          <th>Bastion</th>
-          <th>Fortress</th>
+          <th>Structure #1</th>
+          <th>Structure #2</th>
           <th>Nether Exit</th>
           <th>Stronghold</th>
           <th>End</th>
@@ -28,12 +28,12 @@ const OverallStats = ({ overall }) => {
           {overall.tl.map((val, idx) => {
             if (idx === 0)
               return
-            const perc = Math.round(overall.tl[idx].total / overall.tl[idx-1].total * 10000) / 100
+            const perc = Math.round(val.total / overall.tl[idx-1].total * 10000) / 100
             return <td key={idx}>{!isNaN(perc) ? perc : 0}%</td>
           })}
         </tr>
         <tr>
-          {overall.tl.map((val, idx) => <td key={idx}>{Math.round(overall.tl[idx].total / overall.rc * 10000) / 100}%</td>)}
+          {overall.tl.map((val, idx) => <td key={idx}>{Math.round(val.total / overall.rc * 10000) / 100}%</td>)}
         </tr>
       </tbody>
     </Table>

@@ -22,13 +22,13 @@ export default function handler(req, res) {
       const sessionOps = []
       const overallOps = {}
       const sessions = splitIntoSessions(data)
-      sessions.forEach(session => {
-        const currSessionOps = {}
-        for (const op in operations) {
-          currSessionOps[op] = (operations[op](session.entries))
-        }
-        sessionOps.push({time: session.time, ops: currSessionOps})
-      })
+      // sessions.forEach(session => {
+      //   const currSessionOps = {}
+      //   for (const op in operations) {
+      //     currSessionOps[op] = (operations[op](session.entries))
+      //   }
+      //   sessionOps.push({time: session.time, ops: currSessionOps})
+      // })
       for (const op in operations) {
         overallOps[op] = operations[op](data)
       }
