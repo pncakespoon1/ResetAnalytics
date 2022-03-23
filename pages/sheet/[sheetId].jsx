@@ -1,7 +1,7 @@
 import { useRouter } from 'next/router'
 import { Spinner} from 'react-bootstrap'
 import useSWR from "swr"
-import OverallStats from '../../components/user/OverallStats';
+import Stats from '../../components/user/Stats';
 
 const fetcher = url => fetch(url).then((res) => res.json());
 
@@ -17,7 +17,7 @@ const UserView = () => {
   return (
     <>
       <h1 className="display-2">Lifetime Stats</h1>
-      <OverallStats overall={data.overall} />
+      <Stats data={data.overall} />
     </>
   )
 }

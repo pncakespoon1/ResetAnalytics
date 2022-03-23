@@ -33,11 +33,11 @@ const Home = () => {
           </h1>
         </Col>
       </Row>
-      <Row className="justify-content-center" md={3} style={{minHeight: "20vh"}}>
-        <Col md={6}>
+      <Row className="d-flex justify-content-center flex-wrap" md={3} style={{minHeight: "20vh"}}>
+        <Col md={10}>
           <Search value={search} onChange={setSearch} />
         </Col>
-        <Col md={1}>
+        <Col md={2}>
           <Button variant="success" onClick={doSearch} style={{fontSize: "3vh"}}>
             Search
           </Button>

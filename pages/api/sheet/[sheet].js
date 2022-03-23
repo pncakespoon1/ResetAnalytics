@@ -1,8 +1,8 @@
-import { splitIntoSessions, avgTimelines, resetCount, totalPlaytime, nethersPerHour } from "../../../public/helpers/dataOperations"
+import { splitIntoSessions, avgTimelines, resetCount, totalPlaytime, nethersPerHour, blindsPerHour } from "../../../public/helpers/dataOperations"
 
 const reader = require("g-sheets-api");
 
-const operations = {"tl": avgTimelines, "rc": resetCount, "tp": totalPlaytime, "nph": nethersPerHour}
+const operations = {tl: avgTimelines, rc: resetCount, tp: totalPlaytime, nph: nethersPerHour, bph: blindsPerHour }
 
 export default function handler(req, res) {
   const readerOptions = {

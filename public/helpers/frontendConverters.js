@@ -19,3 +19,5 @@ export const msToStr = ms => {
 
   return hours + ":" + minutes + ":" + seconds;
 }
+
+export const roundToPerc = fullNum => Math.round(fullNum * 100) / 100

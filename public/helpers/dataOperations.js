@@ -7,8 +7,25 @@ const hmsToMs = (h, m, s) => h * 60 * 60 * 1000 + m * 60 * 1000 + s * 1000
 const timeToMs = time => time.length > 0 ? hmsToMs(...time.split(":")) : 0
 
 // Nethers per hour
+export const blindsPerHour = data => {
+  let preBlindRTA = 0
+  let preBlindCount = 0
+  data.forEach(item => {
+    preBlindRTA += timeToMs(item["Nether Exit"].length > 0 ? item["Nether Exit"] : item["RTA"]) + timeToMs(item["RTA Since Prev"])
+    preBlindCount += item["Nether Exit"].length > 0
+  })
+  return preBlindCount / (preBlindRTA / 1000 / 60 / 60)
+}
+
+// Nethers per hour
 export const nethersPerHour = data => {
-  return 10.6
+  let owRTA = 0
+  let netherCount = 0
+  data.forEach(item => {
+    owRTA += timeToMs(item["Nether"].length > 0 ? item["Nether"] : item["RTA"]) + timeToMs(item["RTA Since Prev"])
+    netherCount += item["Nether"].length > 0
+  })
+  return netherCount / (owRTA / 1000 / 60 / 60)
 }
 
 // Total Playtime
@@ -34,6 +51,8 @@ export const avgTimelines = data => {
         if (tItem === "Bastion" || (tItem === "Fortress" && item["Bastion"].length === 0)) {
           if (!currTimeline.hasOwnProperty("Fortress"))
             currTimeline["Fortress"] = {total: 0, sum: 0}
+          if (!currTimeline.hasOwnProperty("Bastion"))
+            currTimeline["Bastion"] = {total: 0, sum: 0}
           const bastTime = timeToMs(item["Bastion"])
           const fortTime = timeToMs(item["Fortress"])
           // Bastion = structure 1 data, Fortress = structure 2 data
