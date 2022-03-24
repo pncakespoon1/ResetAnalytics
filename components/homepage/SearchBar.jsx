@@ -11,7 +11,7 @@ const Search = (props) => {
         aria-describedby="searchBarText"
         onChange={e => props.onChange(e.target.value)}
         value={props.value}
-        placeholder="Enter a player name..."
+        placeholder="Enter a sheet id..."
       />
     </Fragment>
   )

@@ -10,17 +10,8 @@ const Home = () => {
   const [showModal, setShowModal] = useState(false)
 
   const doSearch = () => {
-    if (search !== "") {
-      // Make sure guy exists in db
-      fetch(`/api/user/${search.toLowerCase()}`)
-        .then(res => res.json())
-        .then(res => {
-          if (res.sheetId.length > 0)
-            Router.push(`/sheet/${res.sheetId}`)
-          else
-            setShowModal(true)
-        })
-    }
+    if (search !== "")
+      Router.push(`/sheet/${search}`)
   }
 
   return (
