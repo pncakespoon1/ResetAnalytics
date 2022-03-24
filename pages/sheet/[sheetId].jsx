@@ -23,7 +23,7 @@ const UserView = () => {
         data.session.map((session, idx) => {
           return (
             <Tab key={idx} eventKey={session.time} title={`Session #${data.session.length - idx}`}>
-              <h1 className="display-2">Lifetime Stats</h1>
+              <h1 className="display-2">Overall Stats</h1>
               <Stats data={session.ops} />
             </Tab>
           )
