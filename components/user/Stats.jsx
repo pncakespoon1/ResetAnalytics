@@ -26,6 +26,13 @@ const Stats = ({ data }) => {
             {data.tl.map((val, idx) => <td key={idx}>{msToStr(val.time)}</td>)}
           </tr>
           <tr>
+            {
+              data.tl.map((val, idx) => (
+                <td key={idx}>{idx > 0 && val.time > 0 ? msToStr(val.time - data.tl[idx - 1].time) : "-----"}</td>
+              ))
+            }
+          </tr>
+          <tr>
             <td>{roundToPerc(data.tl[0].total / data.rc * 100)}%</td>
             {data.tl.map((val, idx) => {
               if (idx === 0)

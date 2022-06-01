@@ -78,6 +78,17 @@ export const avgTimelines = data => {
   return finalTimeline
 }
 
+export const enterTypeAnalysis = data => {
+  const enterTypes = {}
+  data.forEach(row => {
+    if (!enterTypes.hasOwnProperty(row["Enter Type"]))
+      enterTypes[row["Enter Type"]] = {total: 0, sum: 0}
+    enterTypes[row["Enter Type"]].total += 1
+    enterTypes[row["Enter Type"]].sum += timeToMs(row["Nether"])
+  })
+  return enterTypes
+}
+
 // Session stats based off if time difference > like 1hr
 export const splitIntoSessions = data => {
   const sessions = []

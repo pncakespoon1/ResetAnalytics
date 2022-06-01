@@ -1,4 +1,4 @@
-export const msToStr = ms => {
+export const msToStr = (ms, keepMs=false) => {
   let milliseconds = Math.floor((ms % 1000) / 100),
     seconds = Math.floor((ms / 1000) % 60),
     minutes = Math.floor((ms / (1000 * 60)) % 60),
@@ -17,7 +17,11 @@ export const msToStr = ms => {
   minutes = (minutes < 10) ? "0" + minutes : minutes;
   seconds = (seconds < 10) ? "0" + seconds : seconds;
 
-  return hours + ":" + minutes + ":" + seconds;
+  let ret =  hours + ":" + minutes + ":" + seconds
+  if (keepMs) {
+    ret += "." + milliseconds
+  }
+  return ret
 }
 
 export const roundToPerc = fullNum => Math.round(fullNum * 100) / 100

@@ -11,6 +11,7 @@ const GeneralExtraStats = ({ data }) => {
           <th>Total Resets</th>
           <th>Total Playtime</th>
           <th>Avg Time Per Reset</th>
+          <th>Resets Per Enter</th>
         </tr>
       </thead>
       <tbody style={{fontFamily: "Roboto", fontSize: "1em"}}>
@@ -19,7 +20,8 @@ const GeneralExtraStats = ({ data }) => {
           <td>{ roundToPerc(data.bph) }</td>
           <td>{ data.rc }</td>
           <td>{ msToStr(data.tp) }</td>
-          <td>{ msToStr(data.tp / data.rc) }</td>
+          <td>{ msToStr(data.tp / data.rc, true) }</td>
+          <td>{ roundToPerc(data.rc / data.tl[2].total) }</td>
         </tr>
       </tbody>
     </Table>
