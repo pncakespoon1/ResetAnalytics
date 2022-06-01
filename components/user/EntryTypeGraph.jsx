@@ -1,19 +1,17 @@
 import { Col, Row } from "react-bootstrap"
-import { BarChart, Tooltip, Bar, XAxis, Pie, PieChart, Cell } from "recharts"
-import { msToStr, roundToPerc } from "../../public/helpers/frontendConverters"
-
-const customLabel = ({ x, y, stroke, value }) => {
-  return <text x={x} y={y} fill={stroke} dx={25} dy={50} fontSize={24}>{msToStr(value)}</text>
-}
+import { BarChart, Tooltip, Bar, XAxis, Pie, PieChart, Cell, LabelList } from "recharts"
+import { msToStr } from "../../public/helpers/frontendConverters"
 
 const COLOURS = ['#0088FE', '#00C49F', '#FFBB28', '#FF8042']
 
 const EntryTypeGraph = ({ data }) => {
   const barChartData = []
   for (const enterType in data.et) {
+    const v = data.et[enterType].sum / data.et[enterType].total
     barChartData.push({
       name: enterType,
-      avg: data.et[enterType].sum / data.et[enterType].total
+      avg: v,
+      label: msToStr(v)
     })
   }
   
@@ -24,13 +22,16 @@ const EntryTypeGraph = ({ data }) => {
       percOfTotal: data.et[enterType].total
     })
   }
+
   return (
     <Row style={{width: "100%"}}>
       <Col>
         <h1>Enter Type Average</h1>
         <BarChart width={500} height={250} data={barChartData}>
           <XAxis dataKey="name" />
-          <Bar label={customLabel} dataKey="avg" fill="#ffffff" />
+          <Bar dataKey="avg" fill="#ffffff">
+            <LabelList fontSize={24} dataKey="label" position="center" />
+          </Bar>
         </BarChart>
       </Col>
       <Col>
