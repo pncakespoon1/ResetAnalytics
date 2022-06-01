@@ -1,5 +1,5 @@
 import { Col, Row } from "react-bootstrap"
-import { BarChart, Tooltip, Bar, XAxis, Pie, PieChart, Cell, LabelList } from "recharts"
+import { BarChart, Tooltip, Bar, XAxis, Pie, PieChart, Cell, Legend, YAxis } from "recharts"
 import { msToStr } from "../../public/helpers/frontendConverters"
 
 const COLOURS = ['#0088FE', '#00C49F', '#FFBB28', '#FF8042']
@@ -28,9 +28,13 @@ const EntryTypeGraph = ({ data }) => {
       <Col>
         <h1>Enter Type Average</h1>
         <BarChart width={500} height={250} data={barChartData}>
-          <XAxis dataKey="name" />
-          <Bar dataKey="avg" fill="#ffffff">
-            <LabelList fontSize={24} dataKey="label" position="center" />
+          <XAxis dataKey="name" stroke="#b2b2b2" />
+          <YAxis tickFormatter={tick => msToStr(tick)} stroke="#b2b2b2" />
+          <Tooltip separator="" formatter={value => [msToStr(value),""]} cursor={false} itemStyle={{color: "#000000"}} labelStyle={{color: "#000000"}} />
+          <Bar label dataKey="avg" fill="#ffffff">
+            {barChartData.map((entry, idx) => (
+              <Cell key={`cell-${idx}`} fill={COLOURS[idx % COLOURS.length]} />
+            ))}
           </Bar>
         </BarChart>
       </Col>
@@ -39,17 +43,18 @@ const EntryTypeGraph = ({ data }) => {
         <PieChart width={300} height={250} className="mx-auto">
           <Pie
             dataKey="percOfTotal"
-            isAnimationActive={false}
+            isAnimationActive={true}
             data={pieChartData}
             cx="50%"
             cy="50%"
-            outerRadius={80}
+            outerRadius={90}
             fill="#00d0ff"
           >
             {pieChartData.map((entry, idx) => (
               <Cell key={`cell-${idx}`} fill={COLOURS[idx % COLOURS.length]} />
             ))}
           </Pie>
+          <Legend layout="horizontal" verticalAlign="bottom" align="right" />
           <Tooltip />
         </PieChart>
       </Col>
