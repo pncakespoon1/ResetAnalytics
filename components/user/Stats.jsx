@@ -1,5 +1,6 @@
 import { Table } from "react-bootstrap"
 import { msToStr, roundToPerc } from "../../public/helpers/frontendConverters"
+import EntryTypeGraph from "./EntryTypeGraph"
 import GeneralExtraStats from "./GeneralExtraStats"
 
 const Stats = ({ data }) => {
@@ -48,6 +49,7 @@ const Stats = ({ data }) => {
       </Table>
       <h1 className="display-2">Additional Analytics</h1>
       <GeneralExtraStats data={data} />
+      <EntryTypeGraph data={data} />
     </>
   )
 }

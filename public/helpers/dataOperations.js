@@ -81,10 +81,12 @@ export const avgTimelines = data => {
 export const enterTypeAnalysis = data => {
   const enterTypes = {}
   data.forEach(row => {
-    if (!enterTypes.hasOwnProperty(row["Enter Type"]))
-      enterTypes[row["Enter Type"]] = {total: 0, sum: 0}
-    enterTypes[row["Enter Type"]].total += 1
-    enterTypes[row["Enter Type"]].sum += timeToMs(row["Nether"])
+    if (row["Enter Type"] !== "None") {
+      if (!enterTypes.hasOwnProperty(row["Enter Type"]))
+        enterTypes[row["Enter Type"]] = {total: 0, sum: 0}
+      enterTypes[row["Enter Type"]].total += 1
+      enterTypes[row["Enter Type"]].sum += timeToMs(row["Nether"])
+    }
   })
   return enterTypes
 }
