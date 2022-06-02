@@ -48,18 +48,29 @@ export const avgTimelines = data => {
         if (!currTimeline.hasOwnProperty(tItem))
           currTimeline[tItem] = {total: 0, sum: 0}
         // Do structure 1, structure 2
-        if (tItem === "Bastion" || (tItem === "Fortress" && item["Bastion"].length === 0)) {
-          if (!currTimeline.hasOwnProperty("Fortress"))
-            currTimeline["Fortress"] = {total: 0, sum: 0}
+        if (tItem === "Bastion") {
           if (!currTimeline.hasOwnProperty("Bastion"))
             currTimeline["Bastion"] = {total: 0, sum: 0}
+          if (!currTimeline.hasOwnProperty("Fortress"))
+            currTimeline["Fortress"] = {total: 0, sum: 0}
           const bastTime = timeToMs(item["Bastion"])
           const fortTime = timeToMs(item["Fortress"])
-          // Bastion = structure 1 data, Fortress = structure 2 data
-          currTimeline["Bastion"].total += bastTime > 0 || fortTime > bastTime
-          currTimeline["Fortress"].total += fortTime > 0 && bastTime > 0
-          currTimeline["Bastion"].sum += fortTime > bastTime ? fortTime : bastTime
-          currTimeline["Fortress"].sum += fortTime > bastTime ? bastTime : fortTime
+          // For simplicity, bastion = structure 1, fortress = structure 2
+          if (bastTime > 0 && fortTime > 0) {
+            // Both structures
+            currTimeline["Bastion"].total++
+            currTimeline["Fortress"].total++
+            currTimeline["Bastion"].sum += fortTime > bastTime ? bastTime : fortTime
+            currTimeline["Fortress"].sum += fortTime > bastTime ? fortTime : bastTime
+          } else if (bastTime > 0) {
+            // Just bastion
+            currTimeline["Bastion"].total++
+            currTimeline["Bastion"].sum += bastTime
+          } else if (fortTime > 0) {
+            // Just fortress
+            currTimeline["Bastion"].total++
+            currTimeline["Bastion"].sum += fortTime
+          }
         } else if (tItem != "Fortress") {
           currTimeline[tItem].total += 1
           currTimeline[tItem].sum += timeToMs(item[tItem])
