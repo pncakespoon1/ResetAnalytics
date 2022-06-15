@@ -2,8 +2,7 @@ import { useRouter } from 'next/router'
 import { Spinner, Tabs, Tab } from 'react-bootstrap'
 import useSWR from "swr"
 import Stats from '../../components/user/Stats';
-
-const fetcher = url => fetch(url).then((res) => res.json());
+import { fetcher } from '../../public/helpers/frontend';
 
 const UserView = () => {
   const router = useRouter()

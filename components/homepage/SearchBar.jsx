@@ -5,13 +5,13 @@ const Search = (props) => {
   return (
     <Fragment>
       <Form.Control
-        style={{fontSize: "3vh"}}
+        style={{fontSize: "2rem"}}
         type="text"
         id="searchBar"
         aria-describedby="searchBarText"
         onChange={e => props.onChange(e.target.value)}
         value={props.value}
-        placeholder="Enter a sheet id..."
+        placeholder="Or enter a sheet id..."
       />
     </Fragment>
   )

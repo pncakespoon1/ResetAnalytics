@@ -9,12 +9,16 @@ export default async function handler(req, res) {
   };
   return new Promise(resolve => {
     reader(readerOptions, data => {
-      return res.status(200).json(data.map(row => (
+      return res.status(200).json(
         {
-          name: row["Username"],
-          sheet: row["SheetId"]
-        }
-      )))
+          success: true,
+          data: data.map(row => (
+            {
+              label: row["Username"],
+              value: row["SheetId"]
+            }
+          ))
+        })
     })
   })
 }

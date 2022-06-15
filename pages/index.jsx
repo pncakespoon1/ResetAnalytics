@@ -1,20 +1,27 @@
 import Router from "next/router"
+import useSWR from "swr"
 import { useState } from "react"
-import { Col, Row, Button } from "react-bootstrap"
-import { SelectSearch } from "react-select-search"
+import { Col, Row, Button, Spinner } from "react-bootstrap"
+import Select from "react-select"
 
+import { fetcher } from '../public/helpers/frontend';
 import BadSearchModal from "../components/homepage/BadSearchModal"
 import Search from "../components/homepage/SearchBar"
 
 const Home = () => {
   const [search, setSearch] = useState("")
   const [showModal, setShowModal] = useState(false)
+  const { data, error } = useSWR("/api/allusers", fetcher);
 
-  const doSearch = () => {
-    if (search !== "")
-      Router.push(`/sheet/${search}`)
+  const doSearch = (toSearch) => {
+    if (toSearch !== "")
+      Router.push(`/sheet/${toSearch}`)
   }
 
+  if (error) return "An error has occurred."
+  if (!data) return <Spinner animation="border" style={{minHeight: "2em", minWidth: "2em", fontSize: "2em"}} />
+  if (!data.success) return <h1>Something went wrong...</h1>
+  
   return (
     <>
       <BadSearchModal show={showModal} onHide={() => setShowModal(false)} />
@@ -25,20 +32,36 @@ const Home = () => {
           </h1>
         </Col>
       </Row>
-      {/* <Row>
-        <SelectSearch
-          options={countries}
-          search
-          filterOptions={fuzzySearch}
-          placeholder="Search for a runner"
-        />
-      </Row> */}
+      <Row style={{minHeight: "10vh", textAlign: "left"}}>
+        <Col>
+          <Select
+            styles={{
+              option: (provided) => ({
+                ...provided,
+                color: "black",
+                fontSize: "1.2rem"
+              }),
+              placeholder: (provided) => ({
+                ...provided,
+                fontSize: "2rem"
+              }),
+              singleValue: (provided) => ({
+                ...provided,
+                fontSize: "2rem"
+              }),
+            }}
+            options={data.data}
+            placeholder="Select a runner"
+            onChange={item => doSearch(item.value)}
+          />
+        </Col>
+      </Row>
       <Row className="d-flex justify-content-center flex-wrap" md={3} style={{minHeight: "20vh"}}>
         <Col md={10}>
           <Search value={search} onChange={setSearch} />
         </Col>
         <Col md={2}>
-          <Button variant="success" onClick={doSearch} style={{fontSize: "3vh"}}>
+          <Button variant="success" onClick={() => doSearch(search)} style={{fontSize: "2rem"}}>
             Search
           </Button>
         </Col>
