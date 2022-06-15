@@ -30,7 +30,7 @@ const MultiValue = props => {
 };
 
 const SessionStats = ({ data, sheet }) => {
-  const [multi, setMulti] = useState(data ? data.session.filter((_, idx) => idx < 2).map(formatData) : [])
+  const [multi, setMulti] = useState(data ? data.session.filter((_, idx) => idx < 5).map(formatData) : [])
   const [sessData, setSessData] = useState(null)
   
   useEffect(() => {
