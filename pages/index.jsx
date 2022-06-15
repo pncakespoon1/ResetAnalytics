@@ -43,7 +43,8 @@ const Home = () => {
               }),
               placeholder: (provided) => ({
                 ...provided,
-                fontSize: "2rem"
+                fontSize: "2rem",
+                padding: "0.275rem 0"
               }),
               singleValue: (provided) => ({
                 ...provided,
@@ -51,7 +52,7 @@ const Home = () => {
               }),
             }}
             options={data.data}
-            placeholder="Select a runner"
+            placeholder="Select a runner..."
             onChange={item => doSearch(item.value)}
           />
         </Col>
