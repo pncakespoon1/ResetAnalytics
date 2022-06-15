@@ -5,7 +5,7 @@ import { msToStr } from "../../public/helpers/frontendConverters"
 const COLOURS = {
   "Magma Ravine": "#0088FE",
   "Bucketless": "#00C49F",
-  "Obsidian": "#FFBB28",
+  "Obsidian": "#973e95",
   "Lava Pool": "#FF8042"
 }
 
