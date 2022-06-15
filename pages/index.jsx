@@ -1,6 +1,7 @@
 import Router from "next/router"
 import { useState } from "react"
 import { Col, Row, Button } from "react-bootstrap"
+import { SelectSearch } from "react-select-search"
 
 import BadSearchModal from "../components/homepage/BadSearchModal"
 import Search from "../components/homepage/SearchBar"
@@ -24,6 +25,14 @@ const Home = () => {
           </h1>
         </Col>
       </Row>
+      {/* <Row>
+        <SelectSearch
+          options={countries}
+          search
+          filterOptions={fuzzySearch}
+          placeholder="Search for a runner"
+        />
+      </Row> */}
       <Row className="d-flex justify-content-center flex-wrap" md={3} style={{minHeight: "20vh"}}>
         <Col md={10}>
           <Search value={search} onChange={setSearch} />
