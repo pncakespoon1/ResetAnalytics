@@ -2,7 +2,12 @@ import { Col, Row } from "react-bootstrap"
 import { BarChart, Tooltip, Bar, XAxis, Pie, PieChart, Cell, Legend, YAxis } from "recharts"
 import { msToStr } from "../../public/helpers/frontendConverters"
 
-const COLOURS = ['#0088FE', '#00C49F', '#FFBB28', '#FF8042']
+const COLOURS = {
+  "Magma Ravine": "#0088FE",
+  "Bucketless": "#00C49F",
+  "Obsidian": "#FFBB28",
+  "Lava Pool": "#FF8042"
+}
 
 const EntryTypeGraph = ({ data }) => {
   const barChartData = []
@@ -33,7 +38,7 @@ const EntryTypeGraph = ({ data }) => {
           <Tooltip separator="" formatter={value => [msToStr(value),""]} cursor={false} itemStyle={{color: "#000000"}} labelStyle={{color: "#000000"}} />
           <Bar dataKey="avg" fill="#ffffff">
             {barChartData.map((entry, idx) => (
-              <Cell key={`cell-${idx}`} fill={COLOURS[idx % COLOURS.length]} />
+              <Cell key={`cell-${idx}`} fill={COLOURS[entry.name]} />
             ))}
           </Bar>
         </BarChart>
@@ -51,7 +56,7 @@ const EntryTypeGraph = ({ data }) => {
             fill="#00d0ff"
           >
             {pieChartData.map((entry, idx) => (
-              <Cell key={`cell-${idx}`} fill={COLOURS[idx % COLOURS.length]} />
+              <Cell key={`cell-${idx}`} fill={COLOURS[entry.name]} />
             ))}
           </Pie>
           <Legend layout="horizontal" verticalAlign="bottom" align="right" />
