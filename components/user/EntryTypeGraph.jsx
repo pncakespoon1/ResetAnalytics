@@ -31,7 +31,7 @@ const EntryTypeGraph = ({ data }) => {
           <XAxis dataKey="name" stroke="#b2b2b2" />
           <YAxis tickFormatter={tick => msToStr(tick)} stroke="#b2b2b2" />
           <Tooltip separator="" formatter={value => [msToStr(value),""]} cursor={false} itemStyle={{color: "#000000"}} labelStyle={{color: "#000000"}} />
-          <Bar label dataKey="avg" fill="#ffffff">
+          <Bar dataKey="avg" fill="#ffffff">
             {barChartData.map((entry, idx) => (
               <Cell key={`cell-${idx}`} fill={COLOURS[idx % COLOURS.length]} />
             ))}
