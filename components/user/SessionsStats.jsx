@@ -41,10 +41,10 @@ const SessionStats = ({ data, sheet }) => {
   return (
     <>
       <Row>
-        <Col md={7}>
+        <Col md={6}>
           <h1 className="display-2">Session Stats</h1>
         </Col>
-        <Col md={4}>
+        <Col md={4} className="align-self-center">
           <Select
             placeholder="Select sessions..."
             options={data.session.map(formatData)}
@@ -62,7 +62,7 @@ const SessionStats = ({ data, sheet }) => {
             }}
           />
         </Col>
-        <Col md={1}>
+        <Col md={1} className="align-self-center">
           <Button variant="success" onClick={() => {
             axios.post(`/api/sheet/${sheet}`, {skipSessions: multi.map(m => m.value)})
               .then(res => setSessData(res.data.overall))
