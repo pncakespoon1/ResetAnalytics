@@ -1,7 +1,8 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Row, Col, Button } from 'react-bootstrap'
 import Select, { components } from "react-select";
 import Stats from '../../components/user/Stats';
+const axios = require('axios');
 
 const formatData = (_, idx) => ({label: `Session #${idx + 1}`, value: idx})
 
@@ -28,10 +29,15 @@ const MultiValue = props => {
   );
 };
 
-const SessionStats = ({ data }) => {
+const SessionStats = ({ data, sheet }) => {
   const [multi, setMulti] = useState(data ? data.session.filter((_, idx) => idx < 2).map(formatData) : [])
-  console.log(multi)
+  const [sessData, setSessData] = useState(null)
   
+  useEffect(() => {
+    axios.post(`/api/sheet/${sheet}`, {skipSessions: multi.map(m => m.value)})
+      .then(res => setSessData(res.data.overall))
+  }, [])
+
   return (
     <>
       <Row>
@@ -57,12 +63,15 @@ const SessionStats = ({ data }) => {
           />
         </Col>
         <Col md={1}>
-          <Button variant="success">
+          <Button variant="success" onClick={() => {
+            axios.post(`/api/sheet/${sheet}`, {skipSessions: multi.map(m => m.value)})
+              .then(res => setSessData(res.data.overall))
+          }}>
             Update
           </Button>
         </Col>
       </Row>
-      <Stats data={data.overall} />
+      { sessData && <Stats data={sessData} /> }
     </>
   )
 }

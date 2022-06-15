@@ -12,6 +12,11 @@ const operations = {
 }
 
 export default function handler(req, res) {
+  let skipSessions = new Set()
+  if (req.method === "POST") {
+    if (req.body.hasOwnProperty('skipSessions'))
+      skipSessions = new Set(req.body.skipSessions)
+  }
   const readerOptions = {
     apiKey: process.env.SHEETS_API_KEY,
     sheetId: req.query.sheet,
@@ -28,16 +33,18 @@ export default function handler(req, res) {
       // Do some operations
       const sessionOps = []
       const overallOps = {}
-      const sessions = splitIntoSessions(data)
-      sessions.forEach(session => {
-        const currSessionOps = {}
-        for (const op in operations) {
-          currSessionOps[op] = (operations[op](session.entries))
-        }
-        sessionOps.push({time: session.time, ops: currSessionOps})
-      })
+      if (skipSessions.size === 0) {
+        const sessions = splitIntoSessions(data)
+        sessions.forEach(session => {
+          const currSessionOps = {}
+          for (const op in operations) {
+            currSessionOps[op] = (operations[op](session.entries))
+          }
+          sessionOps.push({time: session.time, ops: currSessionOps})
+        })
+      }
       for (const op in operations) {
-        overallOps[op] = operations[op](data)
+        overallOps[op] = operations[op](data, skipSessions)
       }
       res.status(200).json({success: true, session: sessionOps, overall: overallOps})
     }, err => {

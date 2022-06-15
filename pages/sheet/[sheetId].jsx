@@ -21,7 +21,7 @@ const UserView = () => {
         <Stats data={data.overall} />
       </Tab>
       <Tab eventKey="sessions" title="Sessions">
-        <SessionStats data={data} />
+        <SessionStats data={data} sheet={sheetId} />
       </Tab>
     </Tabs>
   )
