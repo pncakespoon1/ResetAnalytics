@@ -8,7 +8,7 @@ const timeToMs = time => time.length > 0 ? hmsToMs(...time.split(":")) : 0
 const isNewSession = (prev, curr) => prev - curr > (1000 * 60 * 60)
 
 // Nethers per hour
-export const blindsPerHour = (data, skipSessions=[]) => {
+export const blindsPerHour = (data, keepSessions=[]) => {
   let preBlindRTA = 0
   let preBlindCount = 0
   let prevTime = null
@@ -18,7 +18,7 @@ export const blindsPerHour = (data, skipSessions=[]) => {
     if (isNewSession(prevTime, currTime))
       currSess++
     prevTime = currTime
-    if (skipSessions.size > 0 && skipSessions.has(currSess))
+    if (keepSessions.size > 0 && !keepSessions.has(currSess))
       return
     preBlindRTA += timeToMs(item["Nether Exit"].length > 0 ? item["Nether Exit"] : item["RTA"]) + timeToMs(item["RTA Since Prev"])
     preBlindCount += item["Nether Exit"].length > 0
@@ -27,7 +27,7 @@ export const blindsPerHour = (data, skipSessions=[]) => {
 }
 
 // Nethers per hour
-export const nethersPerHour = (data, skipSessions=[]) => {
+export const nethersPerHour = (data, keepSessions=[]) => {
   let owRTA = 0
   let netherCount = 0
   let prevTime = null
@@ -37,7 +37,7 @@ export const nethersPerHour = (data, skipSessions=[]) => {
     if (isNewSession(prevTime, currTime))
       currSess++
     prevTime = currTime
-    if (skipSessions.size > 0 && skipSessions.has(currSess))
+    if (keepSessions.size > 0 && !keepSessions.has(currSess))
       return
     owRTA += timeToMs(item["Nether"].length > 0 ? item["Nether"] : item["RTA"]) + timeToMs(item["RTA Since Prev"])
     netherCount += item["Nether"].length > 0
@@ -46,7 +46,7 @@ export const nethersPerHour = (data, skipSessions=[]) => {
 }
 
 // Total Playtime
-export const totalPlaytime = (data, skipSessions=[]) => {
+export const totalPlaytime = (data, keepSessions=[]) => {
   let playtime = 0
   let prevTime = null
   let currSess = 0
@@ -55,18 +55,15 @@ export const totalPlaytime = (data, skipSessions=[]) => {
     if (isNewSession(prevTime, currTime))
       currSess++
     prevTime = currTime
-    if (skipSessions.size > 0 && skipSessions.has(currSess))
+    if (keepSessions.size > 0 && !keepSessions.has(currSess))
       return
     playtime += timeToMs(item["RTA Since Prev"]) + timeToMs(item["RTA"])
   })
   return playtime
 }
-// export const totalPlaytime = (data, skipSessions=[]) => data.reduce((total, curr) => {
-//   return total + timeToMs(curr["RTA Since Prev"]) + timeToMs(curr["RTA"])
-// }, 0)
 
 // Reset count
-export const resetCount = (data, skipSessions=[]) => data.reduce((total, curr) => {
+export const resetCount = (data, keepSessions=[]) => data.reduce((total, curr) => {
   let resets = 0
   let prevTime = null
   let currSess = 0
@@ -75,18 +72,15 @@ export const resetCount = (data, skipSessions=[]) => data.reduce((total, curr) =
     if (isNewSession(prevTime, currTime))
       currSess++
     prevTime = currTime
-    if (skipSessions.size > 0 && skipSessions.has(currSess))
+    if (keepSessions.size > 0 && !keepSessions.has(currSess))
       return
     resets += parseInt(item["Wall Resets Since Prev"]) + parseInt(item["Played Since Prev"]) + 1
   })
   return resets
 }, 0)
-// export const resetCount = (data, skipSessions=[]) => data.reduce((total, curr) => {
-//   return total + parseInt(curr["Wall Resets Since Prev"]) + parseInt(curr["Played Since Prev"]) + 1
-// }, 0)
 
 // Averages for all timeline stats
-export const avgTimelines = (data, skipSessions=[]) => {
+export const avgTimelines = (data, keepSessions=[]) => {
   const currTimeline = {}
   // Initalize 
   let prevTime = null
@@ -96,7 +90,7 @@ export const avgTimelines = (data, skipSessions=[]) => {
     if (isNewSession(prevTime, currTime))
       currSess++
     prevTime = currTime
-    if (skipSessions.size > 0 && skipSessions.has(currSess))
+    if (keepSessions.size > 0 && !keepSessions.has(currSess))
       return
     timelines.forEach(tItem => {
       if (item[tItem].length > 0) {
@@ -144,7 +138,7 @@ export const avgTimelines = (data, skipSessions=[]) => {
   return finalTimeline
 }
 
-export const enterTypeAnalysis = (data, skipSessions=[]) => {
+export const enterTypeAnalysis = (data, keepSessions=[]) => {
   const enterTypes = {}
   let prevTime = null
   let currSess = 0
@@ -153,7 +147,7 @@ export const enterTypeAnalysis = (data, skipSessions=[]) => {
     if (isNewSession(prevTime, currTime))
       currSess++
     prevTime = currTime
-    if (skipSessions.size > 0 && skipSessions.has(currSess))
+    if (keepSessions.size > 0 && !keepSessions.has(currSess))
       return
     if (item["Enter Type"] !== "None") {
       if (!enterTypes.hasOwnProperty(item["Enter Type"]))

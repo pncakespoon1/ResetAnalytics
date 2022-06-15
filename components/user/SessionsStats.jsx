@@ -34,7 +34,7 @@ const SessionStats = ({ data, sheet }) => {
   const [sessData, setSessData] = useState(null)
   
   useEffect(() => {
-    axios.post(`/api/sheet/${sheet}`, {skipSessions: multi.map(m => m.value)})
+    axios.post(`/api/sheet/${sheet}`, {keepSessions: multi.map(m => m.value)})
       .then(res => setSessData(res.data.overall))
   }, [])
 
@@ -64,7 +64,7 @@ const SessionStats = ({ data, sheet }) => {
         </Col>
         <Col md={1} className="align-self-center">
           <Button variant="success" onClick={() => {
-            axios.post(`/api/sheet/${sheet}`, {skipSessions: multi.map(m => m.value)})
+            axios.post(`/api/sheet/${sheet}`, {keepSessions: multi.map(m => m.value)})
               .then(res => setSessData(res.data.overall))
           }}>
             Update

@@ -12,10 +12,10 @@ const operations = {
 }
 
 export default function handler(req, res) {
-  let skipSessions = new Set()
+  let keepSessions = new Set()
   if (req.method === "POST") {
-    if (req.body.hasOwnProperty('skipSessions'))
-      skipSessions = new Set(req.body.skipSessions)
+    if (req.body.hasOwnProperty('keepSessions'))
+      keepSessions = new Set(req.body.keepSessions)
   }
   const readerOptions = {
     apiKey: process.env.SHEETS_API_KEY,
@@ -33,7 +33,7 @@ export default function handler(req, res) {
       // Do some operations
       const sessionOps = []
       const overallOps = {}
-      if (skipSessions.size === 0) {
+      if (keepSessions.size === 0) {
         const sessions = splitIntoSessions(data)
         sessions.forEach(session => {
           const currSessionOps = {}
@@ -44,7 +44,7 @@ export default function handler(req, res) {
         })
       }
       for (const op in operations) {
-        overallOps[op] = operations[op](data, skipSessions)
+        overallOps[op] = operations[op](data, keepSessions)
       }
       res.status(200).json({success: true, session: sessionOps, overall: overallOps})
     }, err => {
