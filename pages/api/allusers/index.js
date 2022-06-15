@@ -9,16 +9,22 @@ export default async function handler(req, res) {
   };
   return new Promise(resolve => {
     reader(readerOptions, data => {
-      return res.status(200).json(
+      const values = data.map(row => (
         {
-          success: true,
-          data: data.map(row => (
-            {
-              label: row["Username"],
-              value: row["SheetId"]
-            }
-          ))
-        })
+          label: row["Username"],
+          value: row["SheetId"]
+        }
+      ))
+      console.log(values)
+      values.sort((a, b) => {
+        if (a.label > b.label)
+          return 1
+        if (a.label < b.label)
+          return -1
+        return 0
+      })
+      console.log(values)
+      return res.status(200).json({ success: true, data: values })
     })
   })
 }
