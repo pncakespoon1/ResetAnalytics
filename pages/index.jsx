@@ -50,6 +50,10 @@ const Home = () => {
                 ...provided,
                 fontSize: "2rem"
               }),
+              input: (provided) => ({
+                ...provided,
+                fontSize: "2rem"
+              }),
             }}
             options={data.data}
             placeholder="Select a runner..."
