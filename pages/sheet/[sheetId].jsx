@@ -13,12 +13,15 @@ const UserView = () => {
   if (error) return "An error has occurred."
   if (!data) return <Spinner animation="border" style={{minHeight: "2em", minWidth: "2em", fontSize: "2em"}} />
   if (!data.success) return <h1>Invalid sheet :(</h1>
-  
   return (
     <Tabs transition={false}>
       <Tab eventKey="lifetime" title="Lifetime">
         <h1 className="display-2">Lifetime Stats</h1>
         <Stats data={data.overall} />
+      </Tab>
+      <Tab eventKey="latest" title="Latest">
+        <h1 className="display-2">Latest Session</h1>
+        <Stats data={data.session[0].ops} />
       </Tab>
       <Tab eventKey="sessions" title="Sessions">
         <SessionStats data={data} sheet={sheetId} />

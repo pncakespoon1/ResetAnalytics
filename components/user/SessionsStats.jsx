@@ -4,8 +4,6 @@ import Select, { components } from "react-select";
 import Stats from '../../components/user/Stats';
 const axios = require('axios');
 
-const formatData = (_, idx) => ({label: `Session #${idx + 1}`, value: idx})
-
 const Option = (props) => {
   return (
     <div>
@@ -30,6 +28,7 @@ const MultiValue = props => {
 };
 
 const SessionStats = ({ data, sheet }) => {
+  const formatData = (_, idx) => ({label: `Session #${data.session.length - idx}`, value: idx})
   const [multi, setMulti] = useState(data ? data.session.filter((_, idx) => idx < 5).map(formatData) : [])
   const [sessData, setSessData] = useState(null)
   

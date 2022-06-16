@@ -15,7 +15,6 @@ export default async function handler(req, res) {
           value: row["SheetId"]
         }
       ))
-      console.log(values)
       values.sort((a, b) => {
         if (a.label > b.label)
           return 1
@@ -23,7 +22,6 @@ export default async function handler(req, res) {
           return -1
         return 0
       })
-      console.log(values)
       return res.status(200).json({ success: true, data: values })
     })
   })
