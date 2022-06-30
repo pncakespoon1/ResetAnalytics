@@ -14,6 +14,8 @@ export const blindsPerHour = (data, keepSessions=[]) => {
   let prevTime = null
   let currSess = 0
   data.forEach(item => {
+    if (item["Date and Time"].length === 0)
+      return
     let currTime = (new Date(item["Date and Time"])).getTime()
     if (isNewSession(prevTime, currTime))
       currSess++
@@ -33,6 +35,8 @@ export const nethersPerHour = (data, keepSessions=[]) => {
   let prevTime = null
   let currSess = 0
   data.forEach(item => {
+    if (item["Date and Time"].length === 0)
+      return
     let currTime = (new Date(item["Date and Time"])).getTime()
     if (isNewSession(prevTime, currTime))
       currSess++
@@ -51,6 +55,8 @@ export const totalPlaytime = (data, keepSessions=[]) => {
   let prevTime = null
   let currSess = 0
   data.forEach(item => {
+    if (item["Date and Time"].length === 0)
+      return
     let currTime = (new Date(item["Date and Time"])).getTime()
     if (isNewSession(prevTime, currTime))
       currSess++
@@ -68,6 +74,8 @@ export const resetCount = (data, keepSessions=[]) => data.reduce((total, curr) =
   let prevTime = null
   let currSess = 0
   data.forEach(item => {
+    if (item["Date and Time"].length === 0)
+      return
     let currTime = (new Date(item["Date and Time"])).getTime()
     if (isNewSession(prevTime, currTime))
       currSess++
@@ -86,6 +94,8 @@ export const avgTimelines = (data, keepSessions=[]) => {
   let prevTime = null
   let currSess = 0
   data.forEach(item => {
+    if (item["Date and Time"].length === 0)
+      return
     let currTime = (new Date(item["Date and Time"])).getTime()
     if (isNewSession(prevTime, currTime))
       currSess++
@@ -143,6 +153,8 @@ export const enterTypeAnalysis = (data, keepSessions=[]) => {
   let prevTime = null
   let currSess = 0
   data.forEach(item => {
+    if (item["Date and Time"].length === 0) 
+      return
     let currTime = (new Date(item["Date and Time"])).getTime()
     if (isNewSession(prevTime, currTime))
       currSess++
@@ -165,6 +177,8 @@ export const splitIntoSessions = data => {
   let first = true;
   let prevTime = null;
   data.forEach(item => {
+    if (item["Date and Time"].length === 0)
+      return
     if (!first) {
       let currTime = (new Date(item["Date and Time"])).getTime()
       // If there was more than 1hr of gap, start a new session
