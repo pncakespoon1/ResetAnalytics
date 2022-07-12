@@ -7,7 +7,7 @@ const hmsToMs = (h, m, s) => h * 60 * 60 * 1000 + m * 60 * 1000 + s * 1000
 const timeToMs = time => time.length > 0 ? hmsToMs(...time.split(":")) : 0
 const isNewSession = (prev, curr) => prev - curr > (1000 * 60 * 60)
 
-// Nethers per hour
+// Blinds per hour
 export const blindsPerHour = (data, keepSessions=[]) => {
   let preBlindRTA = 0
   let preBlindCount = 0
@@ -121,16 +121,17 @@ export const avgTimelines = (data, keepSessions=[]) => {
     prevTime = currTime
     if (keepSessions.size > 0 && !keepSessions.has(currSess))
       return
-    timelines.forEach(tItem => {
+    let lastTime = 0
+    timelines.forEach((tItem, idx) => {
       if (item[tItem].length > 0) {
         if (!currTimeline.hasOwnProperty(tItem))
-          currTimeline[tItem] = {total: 0, sum: 0}
+          currTimeline[tItem] = {total: 0, sum: 0, relativeTotal: 0, relativeSum: 0}
         // Do structure 1, structure 2
         if (tItem === "Bastion") {
           if (!currTimeline.hasOwnProperty("Bastion"))
-            currTimeline["Bastion"] = {total: 0, sum: 0}
+            currTimeline["Bastion"] = {total: 0, sum: 0, relativeTotal: 0, relativeSum: 0}
           if (!currTimeline.hasOwnProperty("Fortress"))
-            currTimeline["Fortress"] = {total: 0, sum: 0}
+            currTimeline["Fortress"] = {total: 0, sum: 0, relativeTotal: 0, relativeSum: 0}
           const bastTime = timeToMs(item["Bastion"])
           const fortTime = timeToMs(item["Fortress"])
           // For simplicity, bastion = structure 1, fortress = structure 2
@@ -138,12 +139,18 @@ export const avgTimelines = (data, keepSessions=[]) => {
             // Both structures
             currTimeline["Bastion"].total++
             currTimeline["Fortress"].total++
-            currTimeline["Bastion"].sum += fortTime > bastTime ? bastTime : fortTime
-            currTimeline["Fortress"].sum += fortTime > bastTime ? fortTime : bastTime
+            currTimeline["Bastion"].sum += Math.min(bastTime, fortTime)
+            currTimeline["Fortress"].sum += Math.max(bastTime, fortTime)
+            currTimeline["Bastion"].relativeTotal++
+            currTimeline["Fortress"].relativeTotal++
+            currTimeline["Bastion"].relativeSum += Math.min(bastTime, fortTime) - lastTime
+            currTimeline["Fortress"].relativeSum += Math.abs(fortTime - bastTime)
           } else if (bastTime > 0) {
             // Just bastion
             currTimeline["Bastion"].total++
             currTimeline["Bastion"].sum += bastTime
+            currTimeline["Bastion"].relativeSum += bastTime - lastTime
+            currTimeline["Bastion"].relativeTotal++
           } else if (fortTime > 0) {
             // Just fortress
             currTimeline["Bastion"].total++
@@ -152,7 +159,12 @@ export const avgTimelines = (data, keepSessions=[]) => {
         } else if (tItem != "Fortress") {
           currTimeline[tItem].total += 1
           currTimeline[tItem].sum += timeToMs(item[tItem])
+          if (idx !== 0) {
+            currTimeline[tItem].relativeSum += timeToMs(item[tItem]) - lastTime
+            currTimeline[tItem].relativeTotal++
+          }
         }
+        lastTime = timeToMs(item[tItem])
       }
     })
   })
@@ -160,9 +172,13 @@ export const avgTimelines = (data, keepSessions=[]) => {
   const finalTimeline = []
   timelines.forEach(tItem => {
     if (!currTimeline.hasOwnProperty(tItem))
-      finalTimeline.push({time: 0, total: 0})
+      finalTimeline.push({time: 0, total: 0, tsp: 0})
     else
-      finalTimeline.push({time: currTimeline[tItem].sum / currTimeline[tItem].total, total: currTimeline[tItem].total})
+      finalTimeline.push({
+        time: currTimeline[tItem].sum / currTimeline[tItem].total,
+        total: currTimeline[tItem].total,
+        tsp: currTimeline[tItem].relativeSum / currTimeline[tItem].relativeTotal
+      })
   })
   return finalTimeline
 }

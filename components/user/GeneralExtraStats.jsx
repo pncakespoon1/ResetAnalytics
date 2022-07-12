@@ -11,7 +11,7 @@ const GeneralExtraStats = ({ data }) => {
           <th>Blinds/Hr</th>
           <th>Resets</th>
           <th>Playtime</th>
-          <th>Time Per Reset</th>
+          <th>Time Per Played</th>
           <th>Resets Per Enter</th>
           <th>Seeds Played</th>
         </tr>
@@ -22,7 +22,7 @@ const GeneralExtraStats = ({ data }) => {
           <td>{ roundToPerc(data.bph) }</td>
           <td>{ data.rc }</td>
           <td>{ msToStr(data.tp) }</td>
-          <td>{ msToStr(data.tp / data.rc, true) }</td>
+          <td>{ msToStr(data.tp / data.pc, true) }</td>
           <td>{ roundToPerc(data.rc / data.tl[2].total) }</td>
           <td>{ roundToPerc(roundToPerc(data.pc / data.rc, 4) * 100) }%</td>
         </tr>

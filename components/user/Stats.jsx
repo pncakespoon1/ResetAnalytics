@@ -29,7 +29,7 @@ const Stats = ({ data }) => {
           <tr>
             {
               data.tl.map((val, idx) => (
-                <td key={idx}>{idx > 0 && val.time > 0 ? msToStr(val.time - data.tl[idx - 1].time) : "-----"}</td>
+                <td key={idx}>{idx > 0 && val.time > 0 ? msToStr(val.tsp) : "-----"}</td>
               ))
             }
           </tr>
