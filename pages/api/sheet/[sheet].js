@@ -26,7 +26,7 @@ export default function handler(req, res) {
   };
   return new Promise(resolve => {
     reader(readerOptions, data => {
-      // Check to make sure its a valid sheet
+      // Check to make sure its a valid sheet 
       if (data.length === 0 || !("Break RTA Since Prev" in data[0])) {
         res.status(400).json({success: false})
         return resolve()
