@@ -49,6 +49,25 @@ export const nethersPerHour = (data, keepSessions=[]) => {
   return netherCount / (owRTA / 1000 / 60 / 60)
 }
 
+// Seeds Played
+export const seedsPlayed = (data, keepSessions=[]) => {
+  let seeds = 0
+  let prevTime = null
+  let currSess = 0
+  data.forEach(item => {
+    if (item["Date and Time"].length === 0)
+      return
+    let currTime = (new Date(item["Date and Time"])).getTime()
+    if (isNewSession(prevTime, currTime))
+      currSess++
+    prevTime = currTime
+    if (keepSessions.size > 0 && !keepSessions.has(currSess))
+      return
+    seeds += parseInt(item["Played Since Prev"])
+  })
+  return seeds
+}
+
 // Total Playtime
 export const totalPlaytime = (data, keepSessions=[]) => {
   let playtime = 0

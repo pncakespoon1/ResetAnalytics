@@ -24,4 +24,4 @@ export const msToStr = (ms, keepMs=false) => {
   return ret
 }
 
-export const roundToPerc = fullNum => Math.round(fullNum * 100) / 100
+export const roundToPerc = (fullNum, digits=2) => Math.round(fullNum * (10**digits)) / (10**digits)
