@@ -2,7 +2,6 @@ import { Table } from "react-bootstrap"
 import { msToStr, roundToPerc } from "../../public/helpers/frontendConverters"
 
 const GeneralExtraStats = ({ data }) => {
-  console.log(data)
   return (
     <Table className="mb-4" style={{fontSize: "1.35em"}} responsive bordered hover variant="light">
       <thead>

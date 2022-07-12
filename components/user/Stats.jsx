@@ -1,11 +1,13 @@
 import { Table } from "react-bootstrap"
 import { msToStr, roundToPerc } from "../../public/helpers/frontendConverters"
+import { MainStatsToolTips } from "../Tooltips"
 import EntryTypeGraph from "./EntryTypeGraph"
 import GeneralExtraStats from "./GeneralExtraStats"
 
 const Stats = ({ data }) => {
   return (
     <>
+      <MainStatsToolTips />
       <Table className="mb-4" style={{fontSize: "1.35em"}} responsive bordered hover variant="light">
         <thead>
           <tr>
@@ -20,20 +22,20 @@ const Stats = ({ data }) => {
           </tr>
         </thead>
         <tbody style={{fontFamily: "Roboto", fontSize: "1em"}}>
-          <tr style={{fontSize: "0.9em"}}>
+          <tr data-tip data-for="totals-tip" style={{fontSize: "0.9em"}}>
             {data.tl.map((val, idx) => <td key={idx}>{val.total}</td>)}
           </tr>
-          <tr>
+          <tr data-tip data-for="avgs-tip">
             {data.tl.map((val, idx) => <td key={idx}>{msToStr(val.time)}</td>)}
           </tr>
-          <tr>
+          <tr data-tip data-for="tsp-tip">
             {
               data.tl.map((val, idx) => (
                 <td key={idx}>{idx > 0 && val.time > 0 ? msToStr(val.tsp) : "-----"}</td>
               ))
             }
           </tr>
-          <tr>
+          <tr data-tip data-for="conv-r-tip">
             <td>{roundToPerc(data.tl[0].total / data.rc * 100)}%</td>
             {data.tl.map((val, idx) => {
               if (idx === 0)
@@ -42,7 +44,7 @@ const Stats = ({ data }) => {
               return <td key={idx}>{!isNaN(perc) ? perc : 0}%</td>
             })}
           </tr>
-          <tr>
+          <tr data-tip data-for="conv-g-tip">
             {data.tl.map((val, idx) => <td key={idx}>{roundToPerc(val.total / data.rc * 100)}%</td>)}
           </tr>
         </tbody>

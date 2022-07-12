@@ -1,7 +1,7 @@
 import Document, { Html, Head, Main, NextScript } from "next/document";
 import { Container } from "react-bootstrap"
 import Layout from "../components/Layout"
-import Footer from "../components/footer"
+import Footer from "../components/Footer"
 
 export default class MainDocument extends Document {
   render() {
