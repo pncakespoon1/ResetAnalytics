@@ -5,7 +5,7 @@ An online tool to efficiently analyze 1.16.1 Minecraft Speedrunner analytics
 Relies on [my tracker](https://github.com/Specnr/ResetTracker) to collect data
 
 ## 💻Current Features
-[Check out the live website for yourself](reset-analytics.vercel.app)
+[Check out the live website for yourself](https://reset-analytics.vercel.app)
 
 Currently we show:
 - Splits analysis
