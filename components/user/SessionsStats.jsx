@@ -31,7 +31,6 @@ const SessionStats = ({ data, sheet }) => {
   const formatData = (_, idx) => ({label: `Session #${data.session.length - idx}`, value: idx})
   const [multi, setMulti] = useState(data ? data.session.filter((_, idx) => idx < 5).map(formatData) : [])
   const [sessData, setSessData] = useState(null)
-  console.log(data)
   
   useEffect(() => {
     axios.post(`/api/sheet/${sheet}`, {keepSessions: multi.map(m => m.value)})
