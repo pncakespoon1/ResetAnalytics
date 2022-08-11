@@ -5,7 +5,7 @@ const timelines = ["Wood", "Iron Pickaxe", "Nether", "Bastion", "Fortress", "Net
 
 const hmsToMs = (h, m, s) => h * 60 * 60 * 1000 + m * 60 * 1000 + s * 1000
 const timeToMs = time => time.length > 0 ? hmsToMs(...time.split(":")) : 0
-const isNewSession = (prev, curr) => prev - curr > (1000 * 60 * 60)
+const isNewSession = (prev, curr, breakTime) => prev - curr - breakTime > (1000 * 60 * 60)
 
 // Blinds per hour
 export const blindsPerHour = (data, keepSessions=[]) => {
@@ -13,11 +13,11 @@ export const blindsPerHour = (data, keepSessions=[]) => {
   let preBlindCount = 0
   let prevTime = null
   let currSess = 0
-  data.forEach(item => {
+  data.forEach((item, idx) => {
     if (item["Date and Time"].length === 0)
       return
     let currTime = (new Date(item["Date and Time"])).getTime()
-    if (isNewSession(prevTime, currTime))
+    if (idx > 0 && isNewSession(prevTime, currTime, timeToMs(data[idx - 1]["Break RTA Since Prev"])))
       currSess++
     prevTime = currTime
     if (keepSessions.size > 0 && !keepSessions.has(currSess))
@@ -34,11 +34,11 @@ export const nethersPerHour = (data, keepSessions=[]) => {
   let netherCount = 0
   let prevTime = null
   let currSess = 0
-  data.forEach(item => {
+  data.forEach((item, idx) => {
     if (item["Date and Time"].length === 0)
       return
     let currTime = (new Date(item["Date and Time"])).getTime()
-    if (isNewSession(prevTime, currTime))
+    if (idx > 0 && isNewSession(prevTime, currTime, timeToMs(data[idx - 1]["Break RTA Since Prev"])))
       currSess++
     prevTime = currTime
     if (keepSessions.size > 0 && !keepSessions.has(currSess))
@@ -61,7 +61,7 @@ export const RTANethersPerHour = (data, keepSessions=[]) => {
     if (item["Date and Time"].length === 0)
       return
     let currTime = (new Date(item["Date and Time"])).getTime()
-    if (isNewSession(prevTime, currTime)) {
+    if (idx > 0 && isNewSession(prevTime, currTime, timeToMs(data[idx - 1]["Break RTA Since Prev"]))) {
       if (currSess === 0)
         lastInSess = (new Date(data[0]["Date and Time"])).getTime()
       totalRTA += lastInSess - (new Date(data[idx - 1]["Date and Time"])).getTime() + timeToMs(data[idx - 1]["RTA Since Prev"])
@@ -81,6 +81,7 @@ export const RTANethersPerHour = (data, keepSessions=[]) => {
   })
   lastInSess = lastInSess || (new Date(data[0]["Date and Time"])).getTime()
   totalRTA +=  lastInSess - (new Date(data[data.length - 1]["Date and Time"])).getTime() + timeToMs(data[data.length - 1]["RTA Since Prev"])
+  //console.log(totalRTA, breakTime, netherCount)
   return netherCount / ((totalRTA - breakTime) / 1000 / 60 / 60)
 }
 
@@ -89,11 +90,11 @@ export const seedsPlayed = (data, keepSessions=[]) => {
   let seeds = 0
   let prevTime = null
   let currSess = 0
-  data.forEach(item => {
+  data.forEach((item, idx) => {
     if (item["Date and Time"].length === 0)
       return
     let currTime = (new Date(item["Date and Time"])).getTime()
-    if (isNewSession(prevTime, currTime))
+    if (idx > 0 && isNewSession(prevTime, currTime, timeToMs(data[idx - 1]["Break RTA Since Prev"])))
       currSess++
     prevTime = currTime
     if (keepSessions.size > 0 && !keepSessions.has(currSess))
@@ -108,11 +109,11 @@ export const totalPlaytime = (data, keepSessions=[]) => {
   let playtime = 0
   let prevTime = null
   let currSess = 0
-  data.forEach(item => {
+  data.forEach((item, idx) => {
     if (item["Date and Time"].length === 0)
       return
     let currTime = (new Date(item["Date and Time"])).getTime()
-    if (isNewSession(prevTime, currTime))
+    if (idx > 0 && isNewSession(prevTime, currTime, timeToMs(data[idx - 1]["Break RTA Since Prev"])))
       currSess++
     prevTime = currTime
     if (keepSessions.size > 0 && !keepSessions.has(currSess))
@@ -127,11 +128,11 @@ export const resetCount = (data, keepSessions=[]) => data.reduce((total, curr) =
   let resets = 0
   let prevTime = null
   let currSess = 0
-  data.forEach(item => {
+  data.forEach((item, idx) => {
     if (item["Date and Time"].length === 0)
       return
     let currTime = (new Date(item["Date and Time"])).getTime()
-    if (isNewSession(prevTime, currTime))
+    if (idx > 0 && isNewSession(prevTime, currTime, timeToMs(data[idx - 1]["Break RTA Since Prev"])))
       currSess++
     prevTime = currTime
     if (keepSessions.size > 0 && !keepSessions.has(currSess))
@@ -147,11 +148,11 @@ export const avgTimelines = (data, keepSessions=[]) => {
   // Initalize 
   let prevTime = null
   let currSess = 0
-  data.forEach(item => {
+  data.forEach((item, idx) => {
     if (item["Date and Time"].length === 0)
       return
     let currTime = (new Date(item["Date and Time"])).getTime()
-    if (isNewSession(prevTime, currTime))
+    if (idx > 0 && isNewSession(prevTime, currTime, timeToMs(data[idx - 1]["Break RTA Since Prev"])))
       currSess++
     prevTime = currTime
     if (keepSessions.size > 0 && !keepSessions.has(currSess))
@@ -222,11 +223,11 @@ export const enterTypeAnalysis = (data, keepSessions=[]) => {
   const enterTypes = {}
   let prevTime = null
   let currSess = 0
-  data.forEach(item => {
-    if (item["Date and Time"].length === 0) 
+  data.forEach((item, idx) => {
+    if (item["Date and Time"].length === 0)
       return
     let currTime = (new Date(item["Date and Time"])).getTime()
-    if (isNewSession(prevTime, currTime))
+    if (idx > 0 && isNewSession(prevTime, currTime, timeToMs(data[idx - 1]["Break RTA Since Prev"])))
       currSess++
     prevTime = currTime
     if (keepSessions.size > 0 && !keepSessions.has(currSess))
@@ -246,13 +247,14 @@ export const splitIntoSessions = data => {
   const sessions = []
   let first = true;
   let prevTime = null;
-  data.forEach(item => {
+  data.forEach((item, idx) => {
     if (item["Date and Time"].length === 0)
       return
     if (!first) {
       let currTime = (new Date(item["Date and Time"])).getTime()
       // If there was more than 1hr of gap, start a new session
-      if (isNewSession(prevTime, currTime))
+
+      if (idx > 0 && isNewSession(prevTime, currTime, timeToMs(data[idx - 1]["Break RTA Since Prev"])))
         sessions.push({time: prevTime, entries: [item]})
       else
         sessions[sessions.length - 1].entries.push(item)
