@@ -49,6 +49,41 @@ export const nethersPerHour = (data, keepSessions=[]) => {
   return netherCount / (owRTA / 1000 / 60 / 60)
 }
 
+// RTA Nethers per hour
+export const RTANethersPerHour = (data, keepSessions=[]) => {
+  let breakTime = 0
+  let netherCount = 0
+  let prevTime = null
+  let lastInSess = null
+  let currSess = 0
+  let totalRTA = 0
+  data.forEach((item, idx) => {
+    if (item["Date and Time"].length === 0)
+      return
+    let currTime = (new Date(item["Date and Time"])).getTime()
+    if (isNewSession(prevTime, currTime)) {
+      if (currSess === 0)
+        lastInSess = (new Date(data[0]["Date and Time"])).getTime()
+      totalRTA += lastInSess - (new Date(data[idx - 1]["Date and Time"])).getTime() + timeToMs(data[idx - 1]["RTA Since Prev"])
+      currSess++
+      lastInSess = currTime
+    }
+    prevTime = currTime
+    if (keepSessions.size > 0 && !keepSessions.has(currSess))
+      return
+    if (idx !== data.length - 1)
+      breakTime += timeToMs(item["Break RTA Since Prev"])
+    // If the run has a nether split, subtract Total RTA by RTA of run, then add Nether
+    if (item["Nether"].length > 0) {
+      totalRTA += timeToMs(item["Nether"]) - timeToMs(item["RTA"])
+      netherCount++
+    }
+  })
+  lastInSess = lastInSess || (new Date(data[0]["Date and Time"])).getTime()
+  totalRTA +=  lastInSess - (new Date(data[data.length - 1]["Date and Time"])).getTime() + timeToMs(data[data.length - 1]["RTA Since Prev"])
+  return netherCount / ((totalRTA - breakTime) / 1000 / 60 / 60)
+}
+
 // Seeds Played
 export const seedsPlayed = (data, keepSessions=[]) => {
   let seeds = 0

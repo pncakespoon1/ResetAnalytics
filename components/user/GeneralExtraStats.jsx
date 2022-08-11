@@ -7,6 +7,7 @@ const GeneralExtraStats = ({ data }) => {
       <thead>
         <tr>
           <th>Nethers/Hr</th>
+          <th>RTA Nethers/Hr</th>
           <th>Blinds/Hr</th>
           <th>Resets</th>
           <th>Playtime</th>
@@ -18,6 +19,7 @@ const GeneralExtraStats = ({ data }) => {
       <tbody style={{fontFamily: "Roboto", fontSize: "1em"}}>
         <tr>
           <td>{ roundToPerc(data.nph) }</td>
+          <td>{ roundToPerc(data.tnph) }</td>
           <td>{ roundToPerc(data.bph) }</td>
           <td>{ data.rc }</td>
           <td>{ msToStr(data.tp) }</td>
