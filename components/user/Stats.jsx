@@ -4,7 +4,7 @@ import { MainStatsToolTips } from "../Tooltips"
 import EntryTypeGraph from "./EntryTypeGraph"
 import GeneralExtraStats from "./GeneralExtraStats"
 
-const Stats = ({ data }) => {
+const Stats = ({ data, isSess }) => {
   return (
     <>
       <MainStatsToolTips />
@@ -50,7 +50,7 @@ const Stats = ({ data }) => {
         </tbody>
       </Table>
       <h1 className="display-2">Additional Analytics</h1>
-      <GeneralExtraStats data={data} />
+      <GeneralExtraStats data={data} isSess={isSess} />
       <EntryTypeGraph data={data} />
     </>
   )

@@ -50,7 +50,7 @@ export const nethersPerHour = (data, keepSessions=[]) => {
 }
 
 // RTA Nethers per hour
-export const RTANethersPerHour = (data, keepSessions=[]) => {
+export const RTANethersPerHour = (data, keepSessions=new Set()) => {
   let breakTime = 0
   let netherCount = 0
   let prevTime = null
@@ -64,9 +64,11 @@ export const RTANethersPerHour = (data, keepSessions=[]) => {
     if (idx > 0 && isNewSession(prevTime, currTime, timeToMs(data[idx - 1]["Break RTA Since Prev"]))) {
       if (currSess === 0)
         lastInSess = (new Date(data[0]["Date and Time"])).getTime()
-      totalRTA += lastInSess - (new Date(data[idx - 1]["Date and Time"])).getTime() + timeToMs(data[idx - 1]["RTA Since Prev"])
+      if (keepSessions.size === 0 || keepSessions.has(currSess)) {
+        totalRTA += lastInSess - (new Date(data[idx - 1]["Date and Time"])).getTime() + timeToMs(data[idx - 1]["RTA Since Prev"])
+        lastInSess = currTime
+      }
       currSess++
-      lastInSess = currTime
     }
     prevTime = currTime
     if (keepSessions.size > 0 && !keepSessions.has(currSess))
@@ -79,9 +81,10 @@ export const RTANethersPerHour = (data, keepSessions=[]) => {
       netherCount++
     }
   })
-  lastInSess = lastInSess || (new Date(data[0]["Date and Time"])).getTime()
-  totalRTA +=  lastInSess - (new Date(data[data.length - 1]["Date and Time"])).getTime() + timeToMs(data[data.length - 1]["RTA Since Prev"])
-  //console.log(totalRTA, breakTime, netherCount)
+  if (keepSessions.size === 0 || keepSessions.has(currSess)) {
+    lastInSess = lastInSess || (new Date(data[0]["Date and Time"])).getTime()
+    totalRTA +=  lastInSess - (new Date(data[data.length - 1]["Date and Time"])).getTime() + timeToMs(data[data.length - 1]["RTA Since Prev"])
+  }
   return netherCount / ((totalRTA - breakTime) / 1000 / 60 / 60)
 }
 
