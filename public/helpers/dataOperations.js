@@ -7,151 +7,53 @@ const hmsToMs = (h, m, s) => h * 60 * 60 * 1000 + m * 60 * 1000 + s * 1000
 const timeToMs = time => time.length > 0 ? hmsToMs(...time.split(":")) : 0
 const isNewSession = (prev, curr, breakTime) => prev - curr - breakTime > (1000 * 60 * 60)
 
-// Blinds per hour
-export const blindsPerHour = (data, keepSessions=[]) => {
-  let preBlindRTA = 0
-  let preBlindCount = 0
-  let prevTime = null
-  let currSess = 0
-  data.forEach((item, idx) => {
-    if (item["Date and Time"].length === 0)
-      return
-    let currTime = (new Date(item["Date and Time"])).getTime()
-    if (idx > 0 && isNewSession(prevTime, currTime, timeToMs(data[idx - 1]["Break RTA Since Prev"])))
-      currSess++
-    prevTime = currTime
-    if (keepSessions.size > 0 && !keepSessions.has(currSess))
-      return
-    preBlindRTA += timeToMs(item["Nether Exit"].length > 0 ? item["Nether Exit"] : item["RTA"]) + timeToMs(item["RTA Since Prev"])
-    preBlindCount += item["Nether Exit"].length > 0
-  })
-  return preBlindCount / (preBlindRTA / 1000 / 60 / 60)
+// Blinds per hour (preBlindCount / (preBlindRTA / 1000 / 60 / 60))
+const bph = item => {
+  const preBlindRTA = timeToMs(item["Nether Exit"].length > 0 ? item["Nether Exit"] : item["RTA"]) + timeToMs(item["RTA Since Prev"])
+  const preBlindCount = item["Nether Exit"].length > 0
+  return [preBlindRTA, preBlindCount]
 }
 
-// Nethers per hour
-export const nethersPerHour = (data, keepSessions=[]) => {
-  let owRTA = 0
-  let netherCount = 0
-  let prevTime = null
-  let currSess = 0
-  data.forEach((item, idx) => {
-    if (item["Date and Time"].length === 0)
-      return
-    let currTime = (new Date(item["Date and Time"])).getTime()
-    if (idx > 0 && isNewSession(prevTime, currTime, timeToMs(data[idx - 1]["Break RTA Since Prev"])))
-      currSess++
-    prevTime = currTime
-    if (keepSessions.size > 0 && !keepSessions.has(currSess))
-      return
-    owRTA += timeToMs(item["Nether"].length > 0 ? item["Nether"] : item["RTA"]) + timeToMs(item["RTA Since Prev"])
-    netherCount += item["Nether"].length > 0
-  })
-  return netherCount / (owRTA / 1000 / 60 / 60)
+// Nethers per hour (netherCount / (owRTA / 1000 / 60 / 60))
+const nph = item => {
+  return timeToMs(item["Nether"].length > 0 ? item["Nether"] : item["RTA"]) + timeToMs(item["RTA Since Prev"])
 }
 
-// RTA Nethers per hour
-export const RTANethersPerHour = (data, keepSessions=new Set()) => {
-  let breakTime = 0
-  let netherCount = 0
-  let prevTime = null
-  let lastInSess = null
-  let currSess = 0
-  let totalRTA = 0
-  data.forEach((item, idx) => {
-    if (item["Date and Time"].length === 0)
-      return
-    let currTime = (new Date(item["Date and Time"])).getTime()
-    if (idx > 0 && isNewSession(prevTime, currTime, timeToMs(data[idx - 1]["Break RTA Since Prev"]))) {
-      if (currSess === 0)
-        lastInSess = (new Date(data[0]["Date and Time"])).getTime()
-      if (keepSessions.size === 0 || keepSessions.has(currSess)) {
-        totalRTA += lastInSess - (new Date(data[idx - 1]["Date and Time"])).getTime() + timeToMs(data[idx - 1]["RTA Since Prev"])
-        lastInSess = currTime
-      }
-      currSess++
-    }
-    prevTime = currTime
-    if (keepSessions.size > 0 && !keepSessions.has(currSess))
-      return
-    if (idx !== data.length - 1)
-      breakTime += timeToMs(item["Break RTA Since Prev"])
-    // If the run has a nether split, subtract Total RTA by RTA of run, then add Nether
-    if (item["Nether"].length > 0) {
-      totalRTA += timeToMs(item["Nether"]) - timeToMs(item["RTA"])
-      netherCount++
-    }
-  })
-  if (keepSessions.size === 0 || keepSessions.has(currSess)) {
-    lastInSess = lastInSess || (new Date(data[0]["Date and Time"])).getTime()
-    totalRTA +=  lastInSess - (new Date(data[data.length - 1]["Date and Time"])).getTime() + timeToMs(data[data.length - 1]["RTA Since Prev"])
-  }
-  return netherCount / ((totalRTA - breakTime) / 1000 / 60 / 60)
+// Seeds played
+const sp = item => {
+  return parseInt(item["Played Since Prev"])
 }
 
-// Seeds Played
-export const seedsPlayed = (data, keepSessions=[]) => {
-  let seeds = 0
-  let prevTime = null
-  let currSess = 0
-  data.forEach((item, idx) => {
-    if (item["Date and Time"].length === 0)
-      return
-    let currTime = (new Date(item["Date and Time"])).getTime()
-    if (idx > 0 && isNewSession(prevTime, currTime, timeToMs(data[idx - 1]["Break RTA Since Prev"])))
-      currSess++
-    prevTime = currTime
-    if (keepSessions.size > 0 && !keepSessions.has(currSess))
-      return
-    seeds += parseInt(item["Played Since Prev"])
-  })
-  return seeds
-}
-
-// Total Playtime
-export const totalPlaytime = (data, keepSessions=[]) => {
-  let playtime = 0
-  let prevTime = null
-  let currSess = 0
-  data.forEach((item, idx) => {
-    if (item["Date and Time"].length === 0)
-      return
-    let currTime = (new Date(item["Date and Time"])).getTime()
-    if (idx > 0 && isNewSession(prevTime, currTime, timeToMs(data[idx - 1]["Break RTA Since Prev"])))
-      currSess++
-    prevTime = currTime
-    if (keepSessions.size > 0 && !keepSessions.has(currSess))
-      return
-    playtime += timeToMs(item["RTA Since Prev"]) + timeToMs(item["RTA"])
-  })
-  return playtime
+// Total playtime
+const tp = item => {
+  return timeToMs(item["RTA Since Prev"]) + timeToMs(item["RTA"])
 }
 
 // Reset count
-export const resetCount = (data, keepSessions=[]) => data.reduce((total, curr) => {
-  let resets = 0
-  let prevTime = null
-  let currSess = 0
-  data.forEach((item, idx) => {
-    if (item["Date and Time"].length === 0)
-      return
-    let currTime = (new Date(item["Date and Time"])).getTime()
-    if (idx > 0 && isNewSession(prevTime, currTime, timeToMs(data[idx - 1]["Break RTA Since Prev"])))
-      currSess++
-    prevTime = currTime
-    if (keepSessions.size > 0 && !keepSessions.has(currSess))
-      return
-    resets += parseInt(item["Wall Resets Since Prev"]) + parseInt(item["Played Since Prev"]) + 1
-  })
-  return resets
-}, 0)
+const rc = item => {
+  return parseInt(item["Wall Resets Since Prev"]) + parseInt(item["Played Since Prev"]) + 1
+}
 
-// Averages for all timeline stats
-export const avgTimelines = (data, keepSessions=[]) => {
+// Enter type analysis
+const et = (item, types) => {
+  if (item["Enter Type"] !== "None") {
+    if (!types.hasOwnProperty(item["Enter Type"]))
+      types[item["Enter Type"]] = {total: 0, sum: 0}
+    types[item["Enter Type"]].total += 1
+    types[item["Enter Type"]].sum += timeToMs(item["Nether"])
+  }
+}
+
+// Does all operations
+export const doAllOps = (data, keepSessions=[]) => {
   const currTimeline = {}
   // Initalize 
+  let [enterTypes, resetCount, timePlayed, seedsPlayed, owRTA, preBlindRTA, preBlindCount] = [{}, 0, 0, 0, 0, 0, 0]
+
   let prevTime = null
   let currSess = 0
   data.forEach((item, idx) => {
+    // Determine if this is valid for the session
     if (item["Date and Time"].length === 0)
       return
     let currTime = (new Date(item["Date and Time"])).getTime()
@@ -160,6 +62,7 @@ export const avgTimelines = (data, keepSessions=[]) => {
     prevTime = currTime
     if (keepSessions.size > 0 && !keepSessions.has(currSess))
       return
+    
     let lastTime = 0
     timelines.forEach((tItem, idx) => {
       if (item[tItem].length > 0) {
@@ -206,7 +109,18 @@ export const avgTimelines = (data, keepSessions=[]) => {
         lastTime = timeToMs(item[tItem])
       }
     })
+    
+    // Data operations
+    et(item, enterTypes)
+    resetCount += rc(item)
+    timePlayed += tp(item)
+    seedsPlayed += sp(item)
+    owRTA += nph(item)
+    const bphData = bph(item)
+    preBlindRTA += bphData[0]
+    preBlindCount += bphData[1]
   })
+
   // Average out all the data
   const finalTimeline = []
   timelines.forEach(tItem => {
@@ -219,30 +133,17 @@ export const avgTimelines = (data, keepSessions=[]) => {
         tsp: currTimeline[tItem].relativeSum / currTimeline[tItem].relativeTotal
       })
   })
-  return finalTimeline
-}
 
-export const enterTypeAnalysis = (data, keepSessions=[]) => {
-  const enterTypes = {}
-  let prevTime = null
-  let currSess = 0
-  data.forEach((item, idx) => {
-    if (item["Date and Time"].length === 0)
-      return
-    let currTime = (new Date(item["Date and Time"])).getTime()
-    if (idx > 0 && isNewSession(prevTime, currTime, timeToMs(data[idx - 1]["Break RTA Since Prev"])))
-      currSess++
-    prevTime = currTime
-    if (keepSessions.size > 0 && !keepSessions.has(currSess))
-      return
-    if (item["Enter Type"] !== "None") {
-      if (!enterTypes.hasOwnProperty(item["Enter Type"]))
-        enterTypes[item["Enter Type"]] = {total: 0, sum: 0}
-      enterTypes[item["Enter Type"]].total += 1
-      enterTypes[item["Enter Type"]].sum += timeToMs(item["Nether"])
-    }
-  })
-  return enterTypes
+  const ops = {
+    tl: finalTimeline,
+    rc: resetCount,
+    pc: seedsPlayed,
+    tp: timePlayed,
+    nph: currTimeline["Nether"].total / (owRTA / 1000 / 60 / 60),
+    bph: preBlindCount / (preBlindRTA / 1000 / 60 / 60),
+    et: enterTypes
+  }
+  return ops
 }
 
 // Session stats based off if time difference > like 1hr

@@ -1,17 +1,7 @@
-import { splitIntoSessions, avgTimelines, resetCount, totalPlaytime, nethersPerHour, blindsPerHour, enterTypeAnalysis, seedsPlayed, RTANethersPerHour } from "../../../public/helpers/dataOperations"
+import { splitIntoSessions, doAllOps } from "../../../public/helpers/dataOperations"
 
 const reader = require("g-sheets-api");
 
-const operations = {
-  tl: avgTimelines,
-  rc: resetCount,
-  pc: seedsPlayed,
-  tp: totalPlaytime,
-  tnph: RTANethersPerHour,
-  nph: nethersPerHour,
-  bph: blindsPerHour,
-  et: enterTypeAnalysis
-}
 
 export default function handler(req, res) {
   let keepSessions = new Set()
@@ -33,22 +23,14 @@ export default function handler(req, res) {
         return resolve()
       }
       // Do some operations
-      const sessionOps = []
-      const overallOps = {}
+      const sessionData = []
       if (keepSessions.size === 0) {
         const sessions = splitIntoSessions(data)
         sessions.forEach(session => {
-          const currSessionOps = {}
-          for (const op in operations) {
-            currSessionOps[op] = (operations[op](session.entries))
-          }
-          sessionOps.push({time: session.time, ops: currSessionOps})
+          sessionData.push({time: session.time, ops: doAllOps(session.entries)})
         })
       }
-      for (const op in operations) {
-        overallOps[op] = operations[op](data, keepSessions)
-      }
-      res.status(200).json({success: true, session: sessionOps, overall: overallOps})
+      res.status(200).json({success: true, session: sessionData, overall: doAllOps(data, keepSessions)})
     }, err => {
       console.log(err)
       res.status(400).json({success: false})

@@ -7,8 +7,6 @@ const GeneralExtraStats = ({ data, isSess }) => {
       <thead>
         <tr>
           <th>Nethers/Hr</th>
-          { !isSess && <th>RTA Nethers/Hr</th> }
-          <th>Blinds/Hr</th>
           <th>Resets</th>
           <th>Playtime</th>
           <th>Time Per Played</th>
@@ -19,8 +17,6 @@ const GeneralExtraStats = ({ data, isSess }) => {
       <tbody style={{fontFamily: "Roboto", fontSize: "1em"}}>
         <tr>
           <td>{ roundToPerc(data.nph) }</td>
-          { !isSess && <td>{ roundToPerc(data.tnph) }</td> }
-          <td>{ roundToPerc(data.bph) }</td>
           <td>{ data.rc }</td>
           <td>{ msToStr(data.tp) }</td>
           <td>{ msToStr(data.tp / data.pc, true) }</td>
