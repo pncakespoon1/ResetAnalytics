@@ -139,7 +139,7 @@ export const doAllOps = (data, keepSessions=[]) => {
     rc: resetCount,
     pc: seedsPlayed,
     tp: timePlayed,
-    nph: currTimeline["Nether"] ? currTimeline["Nether"].total : 0 / (owRTA / 1000 / 60 / 60),
+    nph: (currTimeline["Nether"] ? currTimeline["Nether"].total : 0) / (owRTA / 1000 / 60 / 60),
     bph: preBlindCount / (preBlindRTA / 1000 / 60 / 60),
     et: enterTypes
   }
