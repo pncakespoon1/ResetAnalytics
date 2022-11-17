@@ -36,7 +36,7 @@ const rc = item => {
 
 // Enter type analysis
 const et = (item, types) => {
-  if (item["Enter Type"] !== "None") {
+  if (item["Enter Type"] !== "None" && item["Nether"]) {
     if (!types.hasOwnProperty(item["Enter Type"]))
       types[item["Enter Type"]] = {total: 0, sum: 0}
     types[item["Enter Type"]].total += 1
