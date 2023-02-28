@@ -44,11 +44,32 @@ const et = (item, types) => {
   }
 }
 
+// Biome Type nether enter analysis
+const bt = (item, types) => {
+  if (item["Nether"]) {
+    for (let type in types) {
+      if (item["Spawn Biome"].includes(type)) {
+        types[type].total += 1
+        types[type].sum += timeToMs(item["Nether"])
+        return
+      }
+    }
+    types["other"].total += 1
+    types["other"].sum += timeToMs(item["Nether"])
+  }
+}
+
 // Does all operations
 export const doAllOps = (data, keepSessions=[]) => {
   const currTimeline = {}
   // Initalize 
   let [enterTypes, resetCount, timePlayed, seedsPlayed, owRTA, preBlindRTA, preBlindCount] = [{}, 0, 0, 0, 0, 0, 0]
+  let biomeTypes = {
+    "beach": {total: 0, sum: 0},
+    "forest": {total: 0, sum: 0},
+    "plains": {total: 0, sum: 0},
+    "other": {total: 0, sum: 0}
+  }
 
   let prevTime = null
   let currSess = 0
@@ -112,6 +133,7 @@ export const doAllOps = (data, keepSessions=[]) => {
     
     // Data operations
     et(item, enterTypes)
+    bt(item, biomeTypes)
     resetCount += rc(item)
     timePlayed += tp(item)
     seedsPlayed += sp(item)
@@ -141,7 +163,8 @@ export const doAllOps = (data, keepSessions=[]) => {
     tp: timePlayed,
     nph: (currTimeline["Nether"] ? currTimeline["Nether"].total : 0) / (owRTA / 1000 / 60 / 60),
     bph: preBlindCount / (preBlindRTA / 1000 / 60 / 60),
-    et: enterTypes
+    et: enterTypes,
+    bt: biomeTypes
   }
   return ops
 }

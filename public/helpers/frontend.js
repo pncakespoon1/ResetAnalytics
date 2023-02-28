@@ -7,3 +7,5 @@ export const tooltipTexts = {
   convR: "The rate of converting the previous split into the current",
   convG: "The rate of converting any run into this split",
 }
+
+export const colourList = ["#0088FE","#00C49F","#973e95","#FF8042"]

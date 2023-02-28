@@ -1,13 +1,7 @@
 import { Col, Row } from "react-bootstrap"
 import { BarChart, Tooltip, Bar, XAxis, Pie, PieChart, Cell, Legend, YAxis } from "recharts"
+import { colourList } from "../../public/helpers/frontend"
 import { msToStr } from "../../public/helpers/frontendConverters"
-
-const COLOURS = {
-  "Magma Ravine": "#0088FE",
-  "Bucketless": "#00C49F",
-  "Obsidian": "#973e95",
-  "Lava Pool": "#FF8042"
-}
 
 const EntryTypeGraph = ({ data }) => {
   const barChartData = []
@@ -28,42 +22,98 @@ const EntryTypeGraph = ({ data }) => {
     })
   }
 
+  const biomeBarChartData = []
+  for (const biomeType in data.bt) {
+    const v = data.bt[biomeType].sum / data.bt[biomeType].total
+    biomeBarChartData.push({
+      name: biomeType,
+      avg: v,
+      label: msToStr(v)
+    })
+  }
+  
+  const biomePieChartData = []
+  for (const biomeType in data.bt) {
+    biomePieChartData.push({
+      name: biomeType,
+      percOfTotal: data.bt[biomeType].total
+    })
+  }
+
   return (
-    <Row style={{width: "100%"}}>
-      <Col>
-        <h1>Enter Type Average</h1>
-        <BarChart width={500} height={250} data={barChartData}>
-          <XAxis dataKey="name" stroke="#b2b2b2" />
-          <YAxis tickFormatter={tick => msToStr(tick)} stroke="#b2b2b2" />
-          <Tooltip separator="" formatter={value => [msToStr(value),""]} cursor={false} itemStyle={{color: "#000000"}} labelStyle={{color: "#000000"}} />
-          <Bar dataKey="avg" fill="#ffffff">
-            {barChartData.map((entry, idx) => (
-              <Cell key={`cell-${idx}`} fill={COLOURS[entry.name]} />
-            ))}
-          </Bar>
-        </BarChart>
-      </Col>
-      <Col>
-        <h1>Enter Type Percentage</h1>
-        <PieChart width={300} height={250} className="mx-auto">
-          <Pie
-            dataKey="percOfTotal"
-            isAnimationActive={true}
-            data={pieChartData}
-            cx="50%"
-            cy="50%"
-            outerRadius={90}
-            fill="#00d0ff"
-          >
-            {pieChartData.map((entry, idx) => (
-              <Cell key={`cell-${idx}`} fill={COLOURS[entry.name]} />
-            ))}
-          </Pie>
-          <Legend layout="horizontal" verticalAlign="bottom" align="right" />
-          <Tooltip />
-        </PieChart>
-      </Col>
-    </Row>
+    <>
+      <Row style={{width: "100%"}}>
+        <Col>
+          <h1>Enter Type Average</h1>
+          <BarChart width={500} height={250} data={barChartData}>
+            <XAxis dataKey="name" stroke="#b2b2b2" />
+            <YAxis tickFormatter={tick => msToStr(tick)} stroke="#b2b2b2" />
+            <Tooltip separator="" formatter={value => [msToStr(value),""]} cursor={false} itemStyle={{color: "#000000"}} labelStyle={{color: "#000000"}} />
+            <Bar dataKey="avg" fill="#ffffff">
+              {barChartData.map((_, idx) => (
+                <Cell key={`cell-${idx}`} fill={colourList[idx]} />
+              ))}
+            </Bar>
+          </BarChart>
+        </Col>
+        <Col>
+          <h1>Enter Type Percentage</h1>
+          <PieChart width={300} height={250} className="mx-auto">
+            <Pie
+              dataKey="percOfTotal"
+              isAnimationActive={true}
+              data={pieChartData}
+              cx="50%"
+              cy="50%"
+              outerRadius={90}
+              fill="#00d0ff"
+            >
+              {pieChartData.map((_, idx) => (
+                <Cell key={`cell-${idx}`} fill={colourList[idx]} />
+              ))}
+            </Pie>
+            <Legend layout="horizontal" verticalAlign="bottom" align="right" />
+            <Tooltip />
+          </PieChart>
+        </Col>
+      </Row>
+
+      <Row style={{width: "100%"}}>
+        <Col>
+          <h1>Biome Enter Average</h1>
+          <BarChart width={500} height={250} data={biomeBarChartData}>
+            <XAxis dataKey="name" stroke="#b2b2b2" />
+            <YAxis tickFormatter={tick => msToStr(tick)} stroke="#b2b2b2" />
+            <Tooltip separator="" formatter={value => [msToStr(value),""]} cursor={false} itemStyle={{color: "#000000"}} labelStyle={{color: "#000000"}} />
+            <Bar dataKey="avg" fill="#ffffff">
+              {biomeBarChartData.map((_, idx) => (
+                <Cell key={`cell-${idx}`} fill={colourList[(idx + 2) % 4]} />
+              ))}
+            </Bar>
+          </BarChart>
+        </Col>
+        <Col>
+          <h1>Biome Enter Percentage</h1>
+          <PieChart width={300} height={250} className="mx-auto">
+            <Pie
+              dataKey="percOfTotal"
+              isAnimationActive={true}
+              data={biomePieChartData}
+              cx="50%"
+              cy="50%"
+              outerRadius={90}
+              fill="#00d0ff"
+            >
+              {biomePieChartData.map((_, idx) => (
+                <Cell key={`cell-${idx}`} fill={colourList[(idx + 2) % 4]}  />
+              ))}
+            </Pie>
+            <Legend layout="horizontal" verticalAlign="bottom" align="right" />
+            <Tooltip />
+          </PieChart>
+        </Col>
+      </Row>
+    </>
   )
 }
 
