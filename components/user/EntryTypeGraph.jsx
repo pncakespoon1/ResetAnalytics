@@ -43,7 +43,7 @@ const EntryTypeGraph = ({ data }) => {
   return (
     <>
       <Row style={{ width: "100%" }}>
-        <Col style={{ height: "300px" }} className="d-flex flex-column">
+        <Col style={{ height: "300px" }} className="d-flex flex-column col-6">
           <h1>Enter Type Average</h1>
           <ResponsiveContainer >
             <BarChart data={barChartData}>
@@ -58,7 +58,7 @@ const EntryTypeGraph = ({ data }) => {
             </BarChart>
           </ResponsiveContainer>
         </Col>
-        <Col style={{ height: "300px" }} className="d-flex flex-column">
+        <Col style={{ height: "300px" }} className="d-flex flex-column col-6">
           <h1>Enter Type Percentage</h1>
           <ResponsiveContainer>
             <PieChart className="mx-auto">
@@ -83,7 +83,7 @@ const EntryTypeGraph = ({ data }) => {
       </Row>
 
       <Row style={{ width: "100%" }}>
-        <Col style={{ height: "300px" }} className="d-flex flex-column">
+        <Col style={{ height: "300px" }} className="d-flex flex-column col-6">
           <h1>Biome Enter Average</h1>
           <ResponsiveContainer>
             <BarChart width={500} height={250} data={biomeBarChartData}>
@@ -98,7 +98,7 @@ const EntryTypeGraph = ({ data }) => {
             </BarChart>
           </ResponsiveContainer>
         </Col>
-        <Col style={{ height: "300px" }} className="d-flex flex-column">
+        <Col style={{ height: "300px" }} className="d-flex flex-column col-6">
           <h1>Biome Enter Percentage</h1>
           <ResponsiveContainer>
             <PieChart width={300} height={250} className="mx-auto">
