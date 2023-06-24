@@ -27,8 +27,10 @@ export default class MainDocument extends Document {
             <div className="jumbotron d-flex align-items-center" style={{minHeight: "100vh"}}>
               <Container>
                 <div style={{minHeight: "95vh"}} className="d-flex align-items-center justify-content-center">
-                  <Main />
-                  <NextScript />
+                  <div className="overflow-hidden">
+                    <Main />
+                    <NextScript />
+                  </div>
                 </div>
                 <Footer />
               </Container>
