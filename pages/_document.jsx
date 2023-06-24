@@ -26,9 +26,11 @@ export default class MainDocument extends Document {
           <Layout style={{"fontFamily": "VT323"}}>
             <div className="jumbotron d-flex align-items-center" style={{minHeight: "100vh"}}>
               <Container>
-                <div style={{minHeight: "95vh", maxWidth: "872px", margin: "auto"}} className="align-items-center justify-content-center">
-                  <Main />
-                  <NextScript />
+                <div style={{minHeight: "95vh"}} className="d-flex align-items-center justify-content-center">
+                  <div className="overflow-hidden">
+                    <Main />
+                    <NextScript />
+                  </div>
                 </div>
                 <Footer />
               </Container>
