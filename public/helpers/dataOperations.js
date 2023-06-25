@@ -6,6 +6,7 @@ const timelines = ["Wood", "Iron Pickaxe", "Nether", "Bastion", "Fortress", "Net
 const hmsToMs = (h, m, s) => h * 60 * 60 * 1000 + m * 60 * 1000 + s * 1000
 const timeToMs = time => time.length > 0 ? hmsToMs(...time.split(":")) : 0
 const isNewSession = (prev, curr, breakTime) => prev - curr - breakTime > (1000 * 60 * 60)
+const isPncakeTracker = item => "Session Marker" in item
 
 // Blinds per hour (preBlindCount / (preBlindRTA / 1000 / 60 / 60))
 const bph = item => {
@@ -14,19 +15,33 @@ const bph = item => {
   return [preBlindRTA, preBlindCount]
 }
 
-// Nethers per hour (netherCount / (owRTA / 1000 / 60 / 60))
-const nph = item => {
+// Total playtime
+const tp = item => {
+  return timeToMs(item["RTA Since Prev"]) + timeToMs(item["RTA"])
+}
+
+// Time spent in overworld
+const owTime = item => {
   return timeToMs(item["Nether"].length > 0 ? item["Nether"] : item["RTA"]) + timeToMs(item["RTA Since Prev"])
+}
+
+// Time spent on wall
+const wallTime = item => {
+  if (isPncakeTracker(item)) {
+    return timeToMs(item["Wall Time Since Prev"])
+  } else {
+    return null
+  }
+}
+
+// Time spent in nether
+const netherTime = item => {
+  return tp(item) - owTime(item)
 }
 
 // Seeds played
 const sp = item => {
-  return parseInt(item["Played Since Prev"])
-}
-
-// Total playtime
-const tp = item => {
-  return timeToMs(item["RTA Since Prev"]) + timeToMs(item["RTA"])
+  return parseInt(item["Played Since Prev"]) + 1
 }
 
 // Reset count
@@ -64,6 +79,7 @@ export const doAllOps = (data, keepSessions=[]) => {
   const currTimeline = {}
   // Initalize 
   let [enterTypes, resetCount, timePlayed, seedsPlayed, owRTA, preBlindRTA, preBlindCount] = [{}, 0, 0, 0, 0, 0, 0]
+  
   let biomeTypes = {
     "beach": {total: 0, sum: 0},
     "forest": {total: 0, sum: 0},
@@ -71,6 +87,9 @@ export const doAllOps = (data, keepSessions=[]) => {
     "other": {total: 0, sum: 0}
   }
 
+  
+  let [wallRTA, netherRTA] = [0, 0]
+  
   let prevTime = null
   let currSess = 0
   data.forEach((item, idx) => {
@@ -137,10 +156,14 @@ export const doAllOps = (data, keepSessions=[]) => {
     resetCount += rc(item)
     timePlayed += tp(item)
     seedsPlayed += sp(item)
-    owRTA += nph(item)
+    owRTA += owTime(item)
+    netherRTA += netherTime(item)
     const bphData = bph(item)
     preBlindRTA += bphData[0]
     preBlindCount += bphData[1]
+    if (isPncakeTracker(data[0])) {
+      wallRTA += wallTime(item)
+    }
   })
 
   // Average out all the data
@@ -157,6 +180,8 @@ export const doAllOps = (data, keepSessions=[]) => {
   })
 
   const ops = {
+    ot: owRTA,
+    nt: netherRTA,
     tl: finalTimeline,
     rc: resetCount,
     pc: seedsPlayed,
@@ -166,7 +191,16 @@ export const doAllOps = (data, keepSessions=[]) => {
     et: enterTypes,
     bt: biomeTypes
   }
-  return ops
+
+  if (isPncakeTracker(data[0])) {
+    const ops1 = {
+      wt: wallRTA,
+      rnph: (currTimeline["Nether"] ? currTimeline["Nether"].total : 0) / ((owRTA + wallRTA) / 1000 / 60 / 60),
+    }
+    return { ...ops, ...ops1}
+  } else {
+    return ops
+  }
 }
 
 // Session stats based off if time difference > like 1hr

@@ -40,6 +40,21 @@ const EntryTypeGraph = ({ data }) => {
     })
   }
 
+  const playtimePieChartData = []
+  playtimePieChartData.push({
+    name: "OW",
+    percOfTotal: data.ot
+  })
+  playtimePieChartData.push({
+    name: "Nether",
+    percOfTotal: data.nt
+  })
+  playtimePieChartData.push({
+    name: "Wall",
+    percOfTotal: data.wt
+  })
+
+
   return (
     <>
       <Row style={{ width: "100%" }}>
@@ -119,6 +134,30 @@ const EntryTypeGraph = ({ data }) => {
               <Tooltip />
             </PieChart>
           </ResponsiveContainer>
+        </Col>
+      </Row>
+      <Row style={{ width: "100%" }}>
+        <Col style={{ height: "300px" }} className="d-flex flex-column col-md-6 col-sm-12">
+        <h1>Playtime Breakdown</h1>
+        <ResponsiveContainer>
+          <PieChart width={300} height={250} className="mx-auto">
+          <Pie
+                dataKey="percOfTotal"
+                isAnimationActive={true}
+                data={playtimePieChartData}
+                cx="50%"
+                cy="50%"
+                outerRadius={90}
+                fill="#00d0ff"
+              >
+                {biomePieChartData.map((_, idx) => (
+                  <Cell key={`cell-${idx}`} fill={colourList[(idx + 2) % 4]} />
+                ))}
+              </Pie>
+              <Legend layout="horizontal" verticalAlign="bottom" align="right" />
+              <Tooltip />
+          </PieChart>
+        </ResponsiveContainer>
         </Col>
       </Row>
     </>
