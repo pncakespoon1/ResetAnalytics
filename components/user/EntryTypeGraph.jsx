@@ -1,5 +1,5 @@
 import { Col, Row } from "react-bootstrap"
-import { BarChart, Tooltip, Bar, XAxis, Pie, PieChart, Cell, Legend, YAxis, ResponsiveContainer } from "recharts"
+import { BarChart, Tooltip, Bar, XAxis, Pie, PieChart, Cell, Legend, YAxis, ResponsiveContainer, LineChart, Line, CartesianGrid } from "recharts"
 import { colourList } from "../../public/helpers/frontend"
 import { msToStr } from "../../public/helpers/frontendConverters"
 
@@ -53,6 +53,19 @@ const EntryTypeGraph = ({ data }) => {
     name: "Wall",
     percOfTotal: data.wt
   })
+
+  const netherDistData = []
+  const sortedData = [...data.nd].sort((a, b) => a - b);
+  const start = sortedData[0]
+  const end = sortedData[Math.trunc(sortedData.length * 0.98)]
+  const step = 1
+  const dataRange = Array.from(Array(Math.ceil((end - start) / step)).keys(), (i) => start + i * step)
+  dataRange.forEach((num, idx) => {
+    const index = sortedData.findIndex((element) => element >= num)
+    const count1 = index !== -1 ? index : sortedData.length
+    netherDistData.push({time: num, count: count1})
+})
+
 
 
   return (
@@ -138,10 +151,10 @@ const EntryTypeGraph = ({ data }) => {
       </Row>
       <Row style={{ width: "100%" }}>
         <Col style={{ height: "300px" }} className="d-flex flex-column col-md-6 col-sm-12">
-        <h1>Playtime Breakdown</h1>
-        <ResponsiveContainer>
-          <PieChart width={300} height={250} className="mx-auto">
-          <Pie
+          <h1>Playtime Breakdown</h1>
+          <ResponsiveContainer>
+            <PieChart width={300} height={250} className="mx-auto">
+              <Pie
                 dataKey="percOfTotal"
                 isAnimationActive={true}
                 data={playtimePieChartData}
@@ -156,8 +169,21 @@ const EntryTypeGraph = ({ data }) => {
               </Pie>
               <Legend layout="horizontal" verticalAlign="bottom" align="right" />
               <Tooltip />
-          </PieChart>
-        </ResponsiveContainer>
+            </PieChart>
+          </ResponsiveContainer>
+        </Col>
+        <Col style={{ height: "300px" }} className="d-flex flex-column col-md-6 col-sm-12">
+          <h1>Enter Time Distribution</h1>
+          <ResponsiveContainer>
+            <LineChart width={300} height={250} data={netherDistData}>
+              <CartesianGrid strokeDasharray="3 3" />
+              <XAxis dataKey="time" />
+              <YAxis />
+              <Tooltip />
+              <Legend />
+              <Line type="monotone" dataKey="count" stroke="#8884d8" strokeWidth={3} dot={{ r: 2 }}/>
+            </LineChart>
+          </ResponsiveContainer>
         </Col>
       </Row>
     </>

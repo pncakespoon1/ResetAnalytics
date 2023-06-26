@@ -78,7 +78,7 @@ const bt = (item, types) => {
 export const doAllOps = (data, keepSessions=[]) => {
   const currTimeline = {}
   // Initalize 
-  let [enterTypes, resetCount, timePlayed, seedsPlayed, owRTA, preBlindRTA, preBlindCount] = [{}, 0, 0, 0, 0, 0, 0]
+  let [enterTypes, enterDist, resetCount, timePlayed, seedsPlayed, owRTA, preBlindRTA, preBlindCount] = [{}, [], 0, 0, 0, 0, 0, 0]
   
   let biomeTypes = {
     "beach": {total: 0, sum: 0},
@@ -108,6 +108,12 @@ export const doAllOps = (data, keepSessions=[]) => {
       if (item[tItem].length > 0) {
         if (!currTimeline.hasOwnProperty(tItem))
           currTimeline[tItem] = {total: 0, sum: 0, relativeTotal: 0, relativeSum: 0}
+        // Nether Dist Stuff
+        if (tItem === "Nether") {
+          if (timeToMs(item["Nether"]) > 0) {
+            enterDist.push(timeToMs(item["Nether"])/1000)
+          }
+        }
         // Do structure 1, structure 2
         if (tItem === "Bastion") {
           if (!currTimeline.hasOwnProperty("Bastion"))
@@ -182,6 +188,7 @@ export const doAllOps = (data, keepSessions=[]) => {
   const ops = {
     ot: owRTA,
     nt: netherRTA,
+    nd: enterDist,
     tl: finalTimeline,
     rc: resetCount,
     pc: seedsPlayed,
