@@ -25,3 +25,17 @@ export const msToStr = (ms, keepMs=false) => {
 }
 
 export const roundToPerc = (fullNum, digits=2) => Math.round(fullNum * (10**digits)) / (10**digits)
+
+export const processLinePlotData = (data, step) => {
+  const netherDistData = []
+  const sortedData = [...data].sort((a, b) => a - b);
+  const start = sortedData[0]
+  const end = sortedData[Math.trunc(sortedData.length * 0.98)]
+  const dataRange = Array.from(Array(Math.ceil((end - start) / step)).keys(), (i) => start + i * step)
+  dataRange.forEach((num, idx) => {
+    const index = sortedData.findIndex((element) => element >= num)
+    const count1 = index !== -1 ? index : sortedData.length
+    netherDistData.push({time: num, count: count1})
+  })
+  return netherDistData
+}

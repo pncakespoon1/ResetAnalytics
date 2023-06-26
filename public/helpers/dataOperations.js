@@ -111,7 +111,7 @@ export const doAllOps = (data, keepSessions=[]) => {
         // Nether Dist Stuff
         if (tItem === "Nether") {
           if (timeToMs(item["Nether"]) > 0) {
-            enterDist.push(timeToMs(item["Nether"])/1000)
+            enterDist.push(timeToMs(item["Nether"]))
           }
         }
         // Do structure 1, structure 2
