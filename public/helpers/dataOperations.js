@@ -215,7 +215,7 @@ export const splitIntoSessions = data => {
       let currTime = (new Date(item["Date and Time"])).getTime()
       // If there was more than 1hr of gap, start a new session
 
-      if (idx > 0 && isNewSession(prevTime, currTime, timeToMs(data[idx - 1]["Break RTA Since Prev"])))
+      if (idx > 0 && ((!isPncakeTracker(data[idx - 1]) && isNewSession(prevTime, currTime, timeToMs(data[idx - 1]["Break RTA Since Prev"]))) || (isPncakeTracker(data[idx - 1]) && data[idx - 1]["Session Marker"].includes("$"))))
         sessions.push({time: prevTime, entries: [item]})
       else
         sessions[sessions.length - 1].entries.push(item)
