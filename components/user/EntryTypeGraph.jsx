@@ -1,5 +1,5 @@
 import { Col, Row } from "react-bootstrap"
-import { Label, BarChart, Tooltip, Bar, XAxis, Pie, PieChart, Cell, Legend, YAxis, ResponsiveContainer, LineChart, Line, CartesianGrid } from "recharts"
+import { Tick, Label, BarChart, Tooltip, Bar, XAxis, Pie, PieChart, Cell, Legend, YAxis, ResponsiveContainer, LineChart, Line, CartesianGrid } from "recharts"
 import { colourList } from "../../public/helpers/frontend"
 import { msToStr, processLinePlotData } from "../../public/helpers/frontendConverters"
 
@@ -145,8 +145,9 @@ const EntryTypeGraph = ({ data }) => {
           <ResponsiveContainer>
             <LineChart width={500} height={250} data={netherDistData}>
               <CartesianGrid strokeDasharray="3 3" />
-              <XAxis dataKey="time" tickFormatter={value => [msToStr(value), ""]} stroke="#b2b2b2" >
+              <XAxis dataKey="time" tickFormatter={value => [msToStr(value), ""]} stroke="#b2b2b2" interval={14} >
                 <Label value="X (time)" offset={0} position="insideBottom" style={{ textAnchor: 'middle', fill: '#b2b2b2' }}/>
+                <Tick angle={-80} />
               </XAxis>
               <YAxis stroke="#b2b2b2" >
                 <Label value="Sub-X enter count" offset={0} position="insideLeft" angle={-90} style={{ textAnchor: 'middle', fill: '#b2b2b2' }} />
