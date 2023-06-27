@@ -74,6 +74,44 @@ const bt = (item, types) => {
   }
 }
 
+// Iron Type nether enter analysis
+const it = (item, types) => {
+  if (item["Nether"]) {
+    for (let type in types) {
+      if (item["Iron Source"] === type) {
+        types[type].total += 1
+        types[type].sum += timeToMs(item["Nether"])
+        return
+      }
+    }
+    types["other"].total += 1
+    types["other"].sum += timeToMs(item["Nether"])
+  }
+}
+
+const ei = (item, types) => {
+  if (item["Nether"]) {
+    for (let ironType in types) {
+      if (item["Iron Source"] === ironType) {
+        for (let enterType in types[ironType]) {
+          if (item["Enter Type"] === enterType) {
+            types[ironType][enterType].total += 1
+            types[ironType][enterType].sum += timeToMs(item["Nether"])
+            return
+          }
+        }
+      }
+    }
+    for (let enterType in types["other"]) {
+      if (item["Enter Type"] === enterType) {
+        types["other"][enterType].total += 1
+        types["other"][enterType].sum += timeToMs(item["Nether"])
+        return
+      }
+    }
+  }
+}
+
 // Does all operations
 export const doAllOps = (data, keepSessions=[]) => {
   const currTimeline = {}
@@ -85,6 +123,33 @@ export const doAllOps = (data, keepSessions=[]) => {
     "forest": {total: 0, sum: 0},
     "plains": {total: 0, sum: 0},
     "other": {total: 0, sum: 0}
+  }
+
+  let ironTypes = {
+    "Buried Treasure w/ tnt": {total: 0, sum: 0},
+    "Buried Treasure": {total: 0, sum: 0},
+    "Full Shipwreck": {total: 0, sum: 0},
+    "Half Shipwreck": {total: 0, sum: 0},
+    "Village": {total: 0, sum: 0},
+    "other": {total: 0, sum: 0},
+  }
+
+  let enterInfo = {
+    "Buried Treasure w/ tnt": null,
+    "Buried Treasure": null,
+    "Full Shipwreck": null,
+    "Half Shipwreck": null,
+    "Village": null,
+    "other": null,
+  }
+
+  for (let ironType in enterInfo) {
+    enterInfo[ironType] = {
+      "Magma Ravine": {total: 0, sum: 0},
+      "Lava Pool": {total: 0, sum: 0},
+      "Bucketless": {total: 0, sum: 0},
+      "Obsidian": {total: 0, sum: 0}
+    }
   }
 
   
@@ -159,6 +224,8 @@ export const doAllOps = (data, keepSessions=[]) => {
     // Data operations
     et(item, enterTypes)
     bt(item, biomeTypes)
+    it(item, ironTypes)
+    ei(item, enterInfo)
     resetCount += rc(item)
     timePlayed += tp(item)
     seedsPlayed += sp(item)
@@ -196,7 +263,9 @@ export const doAllOps = (data, keepSessions=[]) => {
     nph: (currTimeline["Nether"] ? currTimeline["Nether"].total : 0) / (owRTA / 1000 / 60 / 60),
     bph: preBlindCount / (preBlindRTA / 1000 / 60 / 60),
     et: enterTypes,
-    bt: biomeTypes
+    bt: biomeTypes,
+    it: ironTypes,
+    ei: enterInfo
   }
 
   if (isPncakeTracker(data[0])) {
