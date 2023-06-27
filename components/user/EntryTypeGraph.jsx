@@ -170,7 +170,7 @@ const EntryTypeGraph = ({ data }) => {
                 outerRadius={90}
                 fill="#00d0ff"
               >
-                {biomePieChartData.map((_, idx) => (
+                {playtimePieChartData.map((_, idx) => (
                   <Cell key={`cell-${idx}`} fill={colourList[(idx + 2) % 4]} />
                 ))}
               </Pie>
