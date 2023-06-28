@@ -8,6 +8,20 @@ const timeToMs = time => time.length > 0 ? hmsToMs(...time.split(":")) : 0
 const isNewSession = (prev, curr, breakTime) => prev - curr - breakTime > (1000 * 60 * 60)
 const isPncakeTracker = item => "Session Marker" in item
 
+const processLinePlotData = (data, step) => {
+  const distData = []
+  const sortedData = [...data].sort((a, b) => a - b);
+  const start = 30000
+  const end = sortedData[Math.trunc(sortedData.length * 0.98)]
+  const dataRange = Array.from(Array(Math.ceil((end - start) / step)).keys(), (i) => start + i * step)
+  dataRange.forEach((num, idx) => {
+    const index = sortedData.findIndex((element) => element >= num)
+    const count1 = index !== -1 ? index : sortedData.length
+    distData.push({time: num, count: count1})
+  })
+  return distData
+}
+
 // Blinds per hour (preBlindCount / (preBlindRTA / 1000 / 60 / 60))
 const bph = item => {
   const preBlindRTA = timeToMs(item["Nether Exit"].length > 0 ? item["Nether Exit"] : item["RTA"]) + timeToMs(item["RTA Since Prev"])
@@ -255,7 +269,7 @@ export const doAllOps = (data, keepSessions=[]) => {
   const ops = {
     ot: owRTA,
     nt: netherRTA,
-    nd: enterDist,
+    nd: processLinePlotData(enterDist, 2000),
     tl: finalTimeline,
     rc: resetCount,
     pc: seedsPlayed,

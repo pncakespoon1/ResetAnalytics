@@ -2,7 +2,7 @@ import { Table } from "react-bootstrap"
 import { Col, Row } from "react-bootstrap"
 import { Tick, Label, BarChart, Tooltip, Bar, XAxis, Pie, PieChart, Cell, Legend, YAxis, ResponsiveContainer, LineChart, Line, CartesianGrid } from "recharts"
 import { colourList } from "../../public/helpers/frontend"
-import { msToStr, processLinePlotData } from "../../public/helpers/frontendConverters"
+import { msToStr } from "../../public/helpers/frontendConverters"
 
 const EntryTypeGraph = ({ data }) => {
   const barChartData = []
@@ -73,7 +73,7 @@ const EntryTypeGraph = ({ data }) => {
     percOfTotal: data.wt
   })
 
-  const netherDistData = processLinePlotData(data.nd, 2000)
+  const netherDistData = data.nd
 
 
 
