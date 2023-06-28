@@ -1,6 +1,5 @@
 import { Col, Row } from "react-bootstrap"
-import { Tick, Label, BarChart, Tooltip, Bar, XAxis, Pie, PieChart, Cell, Legend, YAxis, ResponsiveContainer, LineChart, Line, CartesianGrid } from "recharts"
-import { colourList } from "../../../public/helpers/frontend"
+import { Label, Tooltip, XAxis, YAxis, ResponsiveContainer, LineChart, Line, CartesianGrid } from "recharts"
 import { msToStr } from "../../../public/helpers/frontendConverters"
 
 const NetherHistogram = ({ data }) => {
@@ -13,7 +12,7 @@ const NetherHistogram = ({ data }) => {
         <ResponsiveContainer>
           <LineChart width={500} height={250} data={netherDistData} margin={{ top: 10, right: 10, bottom: 70, left: 5 }}>
             <CartesianGrid strokeDasharray="3 3" />
-            <XAxis dataKey="time" tick={{ angle: 80,  textAnchor: "start", dx: -1 }} tickFormatter={value => msToStr(value)} stroke="#b2b2b2" interval={14} >
+            <XAxis dataKey="time" tick={{ angle: 80, textAnchor: "start", dx: -1 }} tickFormatter={value => msToStr(value)} stroke="#b2b2b2" interval={14} >
               <Label value="X (time)" offset={-45} position="insideBottom" style={{ textAnchor: 'middle', fill: '#b2b2b2' }} />
             </XAxis>
             <YAxis stroke="#b2b2b2" >

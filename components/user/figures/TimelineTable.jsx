@@ -1,5 +1,4 @@
 import { Col, Row } from "react-bootstrap"
-import { Tick, Label, BarChart, Tooltip, Bar, XAxis, Pie, PieChart, Cell, Legend, YAxis, ResponsiveContainer, LineChart, Line, CartesianGrid } from "recharts"
 import { Table } from "react-bootstrap"
 import { msToStr, roundToPerc } from "../../../public/helpers/frontendConverters"
 import { MainStatsToolTips } from "../../Tooltips"

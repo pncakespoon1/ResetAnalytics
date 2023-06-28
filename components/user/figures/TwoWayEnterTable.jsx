@@ -1,7 +1,4 @@
 import { Table } from "react-bootstrap"
-import { Tick, Label, BarChart, Tooltip, Bar, XAxis, Pie, PieChart, Cell, Legend, YAxis, ResponsiveContainer, LineChart, Line, CartesianGrid } from "recharts"
-import { colourList } from "../../../public/helpers/frontend"
-import { msToStr } from "../../../public/helpers/frontendConverters"
 
 const TwoWayEnterTable = ({ data }) => {
 
