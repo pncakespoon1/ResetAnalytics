@@ -63,7 +63,7 @@ const EnterTypeGraphs = ({ data }) => {
                 fill="#00d0ff"
               >
                 {enterTypePieChartData.map((_, idx) => (
-                  <Cell key={`cell-${idx}`} fill={colourList[(idx + 2) % 4]} />
+                  <Cell key={`cell-${idx}`} fill={colourList[idx]} />
                 ))}
               </Pie>
               <Legend layout="horizontal" verticalAlign="bottom" align="right" />

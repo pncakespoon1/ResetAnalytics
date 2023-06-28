@@ -43,7 +43,7 @@ const IronSourceGraphs = ({ data }) => {
               <Tooltip separator="" formatter={value => [msToStr(value), ""]} cursor={false} itemStyle={{ color: "#000000" }} labelStyle={{ color: "#000000" }} />
               <Bar dataKey="avg" fill="#ffffff">
                 {ironBarChartData.map((_, idx) => (
-                  <Cell key={`cell-${idx}`} fill={colourList[idx]} />
+                  <Cell key={`cell-${idx}`} fill={colourList[(idx + 1) % colourList.length]} />
                 ))}
               </Bar>
             </BarChart>
@@ -63,7 +63,7 @@ const IronSourceGraphs = ({ data }) => {
                 fill="#00d0ff"
               >
                 {ironPieChartData.map((_, idx) => (
-                  <Cell key={`cell-${idx}`} fill={colourList[(idx + 2) % 4]} />
+                  <Cell key={`cell-${idx}`} fill={colourList[(idx + 1) % colourList.length]} />
                 ))}
               </Pie>
               <Legend layout="horizontal" verticalAlign="bottom" align="right" />
