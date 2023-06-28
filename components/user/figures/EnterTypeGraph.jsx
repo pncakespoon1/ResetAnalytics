@@ -1,7 +1,16 @@
 import { Col, Row } from "react-bootstrap"
 import { Tick, Label, BarChart, Tooltip, Bar, XAxis, Pie, PieChart, Cell, Legend, YAxis, ResponsiveContainer, LineChart, Line, CartesianGrid } from "recharts"
 import { colourList } from "../../../public/helpers/frontend"
-import { msToStr, processLinePlotData } from "../../../public/helpers/frontendConverters"
+import { msToStr } from "../../../public/helpers/frontendConverters"
+
+const CustomTick = ({ x, y, payload }) => {
+  const imgPath = `/imgs/enters/${payload.value.replace("/", "")}.png`
+  return (
+    <>
+        <image x={x - 15} y={y + 10} href={imgPath} width={30} height={30}/>
+    </>
+  )
+}
 
 const EnterTypeGraphs = ({ data }) => {
   const enterTypeBarChartData = []
@@ -28,8 +37,8 @@ const EnterTypeGraphs = ({ data }) => {
         <Col style={{ height: "300px" }} className="d-flex flex-column col-md-6 col-sm-12">
           <h1>Enter Type Average</h1>
           <ResponsiveContainer>
-            <BarChart data={enterTypeBarChartData}>
-              <XAxis dataKey="name" stroke="#b2b2b2" />
+            <BarChart data={enterTypeBarChartData} margin={{ top: 5, right: 5, bottom: 35, left: 5 }}>
+              <XAxis dataKey="name" tick={<CustomTick/>} stroke="#b2b2b2" />
               <YAxis tickFormatter={tick => msToStr(tick)} stroke="#b2b2b2" />
               <Tooltip separator="" formatter={value => [msToStr(value), ""]} cursor={false} itemStyle={{ color: "#000000" }} labelStyle={{ color: "#000000" }} />
               <Bar dataKey="avg" fill="#ffffff">
