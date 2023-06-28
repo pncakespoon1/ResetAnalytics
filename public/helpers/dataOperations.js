@@ -9,6 +9,9 @@ const isNewSession = (prev, curr, breakTime) => prev - curr - breakTime > (1000 
 const isPncakeTracker = item => "Session Marker" in item
 
 const processLinePlotData = (data, step) => {
+  if (data.length === 0) {
+    return []
+  }
   const distData = []
   const sortedData = [...data].sort((a, b) => a - b);
   const start = 30000
