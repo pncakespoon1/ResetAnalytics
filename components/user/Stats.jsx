@@ -17,8 +17,8 @@ const Stats = ({ data, isSess }) => {
       <BiomeTypeGraph data={data} />
       <IronSourceGraph data={data} />
       <Row style={{ width: "100%" }}>
-          <NetherHistogram data={data} />
-          <PlaytimePieChart data={data} />
+        <NetherHistogram data={data} />
+        <PlaytimePieChart data={data} />
       </Row>
       <TwoWayEnterTable data={data} />
     </>

@@ -8,7 +8,7 @@ const TimelineTable = ({ data }) => {
   return (
     <>
       <MainStatsToolTips />
-      <Table className="mb-4" style={{fontSize: "1.35em"}} responsive bordered hover variant="light">
+      <Table className="mb-4" style={{ fontSize: "1.35em" }} responsive bordered hover variant="light">
         <thead>
           <tr>
             <th>Wood</th>
@@ -21,8 +21,8 @@ const TimelineTable = ({ data }) => {
             <th>End</th>
           </tr>
         </thead>
-        <tbody style={{fontFamily: "Roboto", fontSize: "1em"}}>
-          <tr data-tip data-for="totals-tip" style={{fontSize: "0.9em"}}>
+        <tbody style={{ fontFamily: "Roboto", fontSize: "1em" }}>
+          <tr data-tip data-for="totals-tip" style={{ fontSize: "0.9em" }}>
             {data.tl.map((val, idx) => <td key={idx}>{val.total}</td>)}
           </tr>
           <tr data-tip data-for="avgs-tip">
@@ -40,7 +40,7 @@ const TimelineTable = ({ data }) => {
             {data.tl.map((val, idx) => {
               if (idx === 0)
                 return
-              const perc = roundToPerc(val.total / data.tl[idx-1].total * 100)
+              const perc = roundToPerc(val.total / data.tl[idx - 1].total * 100)
               return <td key={idx}>{!isNaN(perc) ? perc : 0}%</td>
             })}
           </tr>
