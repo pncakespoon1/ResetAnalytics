@@ -1,9 +1,9 @@
 // Wants:
 // Graph session stats over time 
 
-const timelines = ["Wood", "Iron Pickaxe", "Nether", "Bastion", "Fortress", "Nether Exit", "Stronghold", "End"]
+const timelines = ["Iron", "Wood", "Iron Pickaxe", "Nether", "Bastion", "Fortress", "Nether Exit", "Stronghold", "End"]
 
-const hmsToMs = (h, m, s) => h * 60 * 60 * 1000 + m * 60 * 1000 + s * 1000
+const hmsToMs = (h, m, s) => h * 60 * 60 * 1000 + m * 60 * 1000 + Math.round(s * 1000)
 const timeToMs = time => time.length > 0 ? hmsToMs(...time.split(":")) : 0
 const isNewSession = (prev, curr, breakTime) => prev - curr - breakTime > (1000 * 60 * 60)
 const isPncakeTracker = item => "Session Marker" in item
@@ -187,7 +187,7 @@ export const doAllOps = (data, keepSessions=[]) => {
     
     let lastTime = 0
     timelines.forEach((tItem, idx) => {
-      if (item[tItem].length > 0) {
+      if (item[tItem].length > 0 || (tItem === "Bastion" && item["Fortress"].length > 0)) {
         if (!currTimeline.hasOwnProperty(tItem))
           currTimeline[tItem] = {total: 0, sum: 0, relativeTotal: 0, relativeSum: 0}
         // Nether Dist Stuff
@@ -225,6 +225,8 @@ export const doAllOps = (data, keepSessions=[]) => {
             // Just fortress
             currTimeline["Bastion"].total++
             currTimeline["Bastion"].sum += fortTime
+            currTimeline["Bastion"].relativeSum += fortTime - lastTime
+            currTimeline["Bastion"].relativeTotal++
           }
         } else if (tItem != "Fortress") {
           currTimeline[tItem].total += 1
@@ -277,7 +279,7 @@ export const doAllOps = (data, keepSessions=[]) => {
     rc: resetCount,
     pc: seedsPlayed,
     tp: timePlayed,
-    nph: (currTimeline["Nether"] ? currTimeline["Nether"].total : 0) / (owRTA / 1000 / 60 / 60),
+    nph: (currTimeline["Nether"] ? currTimeline["Nether"].total : 0) / ((isPncakeTracker(data[0]) ? owRTA + wallRTA : owRTA) / 1000 / 60 / 60),
     bph: preBlindCount / (preBlindRTA / 1000 / 60 / 60),
     et: enterTypes,
     bt: biomeTypes,
@@ -288,7 +290,6 @@ export const doAllOps = (data, keepSessions=[]) => {
   if (isPncakeTracker(data[0])) {
     const ops1 = {
       wt: wallRTA,
-      rnph: (currTimeline["Nether"] ? currTimeline["Nether"].total : 0) / ((owRTA + wallRTA) / 1000 / 60 / 60),
     }
     return { ...ops, ...ops1}
   } else {

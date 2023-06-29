@@ -23,8 +23,8 @@ const GeneralExtraStats = ({ data, isSess }) => {
             <td>{roundToPerc(data.bph)}</td>
             <td>{data.rc}</td>
             <td>{msToStr(data.tp)}</td>
-            <td>{msToStr(data.tp / data.pc, true)}</td>
-            <td>{roundToPerc(data.rc / data.tl[2].total)}</td>
+            <td>{msToStr(data.tp / data.pc)}</td>
+            <td>{roundToPerc(data.rc / data.tl[3].total)}</td>
             <td>{roundToPerc(roundToPerc(data.pc / data.rc, 4) * 100)}%</td>
           </tr>
         </tbody>

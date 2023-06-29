@@ -12,7 +12,7 @@ const NetherHistogram = ({ data }) => {
         <ResponsiveContainer>
           <LineChart width={500} height={250} data={netherDistData} margin={{ top: 10, right: 10, bottom: 70, left: 5 }}>
             <CartesianGrid strokeDasharray="3 3" />
-            <XAxis dataKey="time" tick={{ angle: 80, textAnchor: "start", dx: -1 }} tickFormatter={value => msToStr(value)} stroke="#b2b2b2" interval={14} >
+            <XAxis dataKey="time" tick={{ angle: 80, textAnchor: "start", dx: -1 }} tickFormatter={value => msToStr(value)} stroke="#b2b2b2" interval={4} >
               <Label value="X (time)" offset={-45} position="insideBottom" style={{ textAnchor: 'middle', fill: '#b2b2b2' }} />
             </XAxis>
             <YAxis stroke="#b2b2b2" >

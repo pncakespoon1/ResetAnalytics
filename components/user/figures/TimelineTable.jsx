@@ -10,6 +10,7 @@ const TimelineTable = ({ data }) => {
       <Table className="mb-4" style={{ fontSize: "1.35em" }} responsive bordered hover variant="light">
         <thead>
           <tr>
+            <th>Iron</th>
             <th>Wood</th>
             <th>Iron Pickaxe</th>
             <th>Nether</th>

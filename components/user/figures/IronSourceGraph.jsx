@@ -35,7 +35,7 @@ const IronSourceGraphs = ({ data }) => {
     <>
       <Row style={{ width: "100%" }}>
         <Col style={{ height: "350px" }} className="d-flex flex-column col-md-6 col-sm-12">
-          <h1>Iron Source Average</h1>
+          <h1>Iron Source Enter Avg</h1>
           <ResponsiveContainer>
             <BarChart data={ironBarChartData} margin={{ top: 5, right: 5, bottom: 35, left: 5 }}>
               <XAxis dataKey="name" tick={<CustomTick />} stroke="#b2b2b2"  interval={0} />
