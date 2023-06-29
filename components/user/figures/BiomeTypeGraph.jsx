@@ -38,7 +38,7 @@ const BiomeTypeGraphs = ({ data }) => {
           <h1>Biome Average</h1>
           <ResponsiveContainer>
             <BarChart data={biomeBarChartData} margin={{ top: 5, right: 5, bottom: 35, left: 5 }}>
-              <XAxis dataKey="name" tick={<CustomTick />} stroke="#b2b2b2" />
+              <XAxis dataKey="name" tick={<CustomTick />} stroke="#b2b2b2" interval={0} />
               <YAxis tickFormatter={tick => msToStr(tick)} stroke="#b2b2b2" />
               <Tooltip separator="" formatter={value => [msToStr(value), ""]} cursor={false} itemStyle={{ color: "#000000" }} labelStyle={{ color: "#000000" }} />
               <Bar dataKey="avg" fill="#ffffff">
