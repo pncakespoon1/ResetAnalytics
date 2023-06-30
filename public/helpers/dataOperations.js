@@ -4,7 +4,7 @@
 const timelines = ["Iron", "Wood", "Iron Pickaxe", "Nether", "Bastion", "Fortress", "Nether Exit", "Stronghold", "End"]
 
 const hmsToMs = (h, m, s) => h * 60 * 60 * 1000 + m * 60 * 1000 + Math.round(s * 1000)
-const timeToMs = time => time.length > 0 ? hmsToMs(...time.split(":")) : 0
+const timeToMs = time => time.length > 0 ? hmsToMs(...time.replace("*", "").split(":")) : 0
 const isNewSession = (prev, curr, breakTime) => prev - curr - breakTime > (1000 * 60 * 60)
 const isPncakeTracker = item => "Session Marker" in item
 
