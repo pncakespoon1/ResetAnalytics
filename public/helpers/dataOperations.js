@@ -7,17 +7,17 @@ const hmsToMs = (h, m, s) => h * 60 * 60 * 1000 + m * 60 * 1000 + Math.round(s *
 const timeToMs = time => time.length > 0 ? hmsToMs(...time.replace("*", "").split(":")) : 0
 const isNewSession = (prev, curr, breakTime) => prev - curr - breakTime > (1000 * 60 * 60)
 const isPncakeTracker = item => "Session Marker" in item
-const mean = dist => dist.reduce((acc, val) => acc + val, 0) / dist.length
-const stdev = dist => Math.sqrt(numbers.reduce((acc, val) => acc + Math.pow(val - mean(dist), 2), 0) / numbers.length)
+const mean = dist => (dist.length > 1 ? dist.reduce((acc, val) => acc + val, 0) / dist.length : 0)
+const stdev = dist => (dist.length > 1 ? Math.sqrt(dist.reduce((acc, val) => acc + Math.pow(val - mean(dist), 2), 0) / dist.length) : 0)
 
 const processLinePlotData = (data, step) => {
-  if (data.length === 0) {
+  if (data.length < 2) {
     return []
   }
   const distData = []
   const sortedData = [...data].sort((a, b) => a - b);
-  const start = Math.min(30000, sortedData[0])
-  const end = sortedData[Math.trunc(sortedData.length * 0.98)]
+  const start = Math.min(30000, Math.floor(sortedData[Math.ceil(sortedData.length * 0.02)] / 30000) * 30000)
+  const end = sortedData[Math.floor(sortedData.length * 0.98)]
   const dataRange = Array.from(Array(Math.ceil((end - start) / step)).keys(), (i) => start + i * step)
   dataRange.forEach((num, idx) => {
     const index = sortedData.findIndex((element) => element >= num)
@@ -189,9 +189,10 @@ export const doAllOps = (data, keepSessions = []) => {
 
     let lastTime = 0
     timelines.forEach((tItem, idx) => {
+      if (!currTimeline.hasOwnProperty(tItem)) {
+        currTimeline[tItem] = { total: 0, sum: 0, relativeTotal: 0, relativeSum: 0, preSplitRTA: 0, cDist: [], rDist: [] }
+      }
       if (item[tItem].length > 0 || (tItem === "Bastion" && item["Fortress"].length > 0)) {
-        if (!currTimeline.hasOwnProperty(tItem))
-          currTimeline[tItem] = { total: 0, sum: 0, relativeTotal: 0, relativeSum: 0, preSplitRTA: 0, cDist: [], rDist: [] }
         // Nether Dist Stuff
         if (tItem === "Nether") {
           if (timeToMs(item["Nether"]) > 0) {
@@ -200,23 +201,14 @@ export const doAllOps = (data, keepSessions = []) => {
         }
         // Do structure 1, structure 2
         if (tItem === "Bastion") {
-          if (!currTimeline.hasOwnProperty("Bastion"))
-            currTimeline["Bastion"] = { total: 0, sum: 0, relativeTotal: 0, relativeSum: 0, preSplitRTA: 0, cDist: [], rDist: [] }
-          if (!currTimeline.hasOwnProperty("Fortress"))
+          if (!currTimeline.hasOwnProperty("Fortress")) {
             currTimeline["Fortress"] = { total: 0, sum: 0, relativeTotal: 0, relativeSum: 0, preSplitRTA: 0, cDist: [], rDist: [] }
+          }
           const bastTime = timeToMs(item["Bastion"])
           const fortTime = timeToMs(item["Fortress"])
           // For simplicity, bastion = structure 1, fortress = structure 2
           if (bastTime > 0 && fortTime > 0) {
             // Both structures
-            currTimeline["Bastion"].total++
-            currTimeline["Fortress"].total++
-            currTimeline["Bastion"].sum += Math.min(bastTime, fortTime)
-            currTimeline["Fortress"].sum += Math.max(bastTime, fortTime)
-            currTimeline["Bastion"].relativeTotal++
-            currTimeline["Fortress"].relativeTotal++
-            currTimeline["Bastion"].relativeSum += Math.min(bastTime, fortTime) - lastTime
-            currTimeline["Fortress"].relativeSum += Math.abs(fortTime - bastTime)
             currTimeline["Bastion"].preSplitRTA += Math.min(bastTime, fortTime)
             currTimeline["Fortress"].preSplitRTA += Math.max(bastTime, fortTime)
             currTimeline["Bastion"].cDist.push(Math.min(bastTime, fortTime))
@@ -225,33 +217,21 @@ export const doAllOps = (data, keepSessions = []) => {
             currTimeline["Fortress"].rDist.push(Math.abs(fortTime - bastTime))
           } else if (bastTime > 0) {
             // Just bastion
-            currTimeline["Bastion"].total++
-            currTimeline["Bastion"].sum += bastTime
-            currTimeline["Bastion"].relativeSum += bastTime - lastTime
-            currTimeline["Bastion"].relativeTotal++
             currTimeline["Bastion"].preSplitRTA += bastTime
             currTimeline["Fortress"].preSplitRTA += timeToMs(item["RTA"])
             currTimeline["Bastion"].cDist.push(bastTime)
             currTimeline["Bastion"].rDist.push(bastTime - lastTime)
           } else if (fortTime > 0) {
             // Just fortress
-            currTimeline["Bastion"].total++
-            currTimeline["Bastion"].sum += fortTime
-            currTimeline["Bastion"].relativeSum += fortTime - lastTime
-            currTimeline["Bastion"].relativeTotal++
             currTimeline["Bastion"].preSplitRTA += fortTime
             currTimeline["Fortress"].preSplitRTA += timeToMs(item["RTA"])
             currTimeline["Bastion"].cDist.push(fortTime)
             currTimeline["Bastion"].rDist.push(fortTime - lastTime)
           }
         } else if (tItem != "Fortress") {
-          currTimeline[tItem].total += 1
-          currTimeline[tItem].sum += timeToMs(item[tItem])
           currTimeline[tItem].preSplitRTA += timeToMs(item[tItem])
           currTimeline[tItem].cDist.push(timeToMs(item[tItem]))
           if (idx !== 0) {
-            currTimeline[tItem].relativeSum += timeToMs(item[tItem]) - lastTime
-            currTimeline[tItem].relativeTotal++
             currTimeline[tItem].rDist.push(timeToMs(item[tItem]) - lastTime)
           }
         }
@@ -284,17 +264,17 @@ export const doAllOps = (data, keepSessions = []) => {
   let prevCount = resetCount
   timelines.forEach(tItem => {
     if (!currTimeline.hasOwnProperty(tItem))
-      finalTimeline.push({ time: 0, total: 0, tsp: 0, XPH: 0, cStdev: 0, rStdev: 0, cDist: [], rDist: [] })
+      finalTimeline.push({ time: 0, total: 0, tsp: 0, XPH: 0, cStdev: 0, rStdev: 0, cDist: [], rDist: [], cConv: 0, rConv: 0 })
     else
       finalTimeline.push({
         time: mean(currTimeline[tItem].cDist),
         total: currTimeline[tItem].cDist.length,
         tsp: mean(currTimeline[tItem].rDist),
-        xph: (currTimeline[tItem] ? currTimeline[tItem].total : 0) / (currTimeline[tItem].preSplitRTA / 1000 / 60 / 60),
+        xph: (currTimeline[tItem] ? currTimeline[tItem].total / (currTimeline[tItem].preSplitRTA / 1000 / 60 / 60) : 0),
         cStdev: stdev(currTimeline[tItem].cDist),
         rStdev: stdev(currTimeline[tItem].rDist),
-        cDist: processLinePlotData(currTimeline[tItem].cDist),
-        rDist: processLinePlotData(currTimeline[tItem].rDist),
+        cDist: processLinePlotData(currTimeline[tItem].cDist, 5000),
+        rDist: processLinePlotData(currTimeline[tItem].rDist, 5000),
         cConv: currTimeline[tItem].cDist.length / resetCount,
         rConv: currTimeline[tItem].cDist.length / prevCount
       })

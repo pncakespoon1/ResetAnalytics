@@ -4,7 +4,7 @@ import { msToStr, roundToPerc } from "../../../public/helpers/frontendConverters
 const SplitInfo = ({ splitName, splitData }) => {
     return (
         <>
-            <h1 className="display-2">Split Info for {splitName}</h1>
+            <h1>Split Info for {splitName}</h1>
             <Table className="mb-4" style={{ fontSize: "1.35em" }} responsive bordered hover variant="light">
                 <thead>
                     <tr>
