@@ -1,9 +1,20 @@
 import React from 'react'
 import { ResponsiveContainer, Treemap, Tooltip } from 'recharts'
+import { colourList } from '../../../public/helpers/frontend'
 
 const NetherTree = ({ netherTreeData }) => {
-    const renderContent = ({ root, depth, x, y, width, height, index, payload, colors, rank, name }) => {
-        const color = colors[name]
+    const renderContent = ({ root, depth, x, y, width, height, index, payload, rank, name }) => {
+        if (name == "No Structures") {
+            var color = colourList[0]
+        } else if (root.name == "Bastion First") {
+            var color = colourList[1]
+        } else if (root.name == "Fortress First") {
+            var color = colourList[2]
+        }
+
+        console.log(name)
+        console.log(root)
+        console.log(depth)
         return (
             <g>
                 <rect x={x} y={y} width={width} height={height} fill={color} />
@@ -20,15 +31,6 @@ const NetherTree = ({ netherTreeData }) => {
         )
     }
 
-    const colors = {
-        "No Structures": "#ff0000",
-        "Bast": "#00ff00",
-        "Bast, Fort": "#00ff00",
-        "Bast, Fort, Blind": "#00ff00",
-        "Fort": "#0000ff",
-        "Fort, Bast": "#0000ff",
-        "Fort, Bast, Blind": "#0000ff"
-    }
 
     return (
         <ResponsiveContainer width="100%" height={300}>
@@ -39,7 +41,7 @@ const NetherTree = ({ netherTreeData }) => {
                 ratio={4 / 3}
                 stroke="#fff"
                 fill={'#8889DD'}
-                content={props => renderContent({ ...props, colors })}
+                content={props => renderContent({ ...props })}
             >
                 <Tooltip />
             </Treemap>
