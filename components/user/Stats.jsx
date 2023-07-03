@@ -10,6 +10,7 @@ import IronSourceGraph from "./figures/IronSourceGraph"
 import SplitHistogram from "./figures/SplitHistogram"
 import PlaytimePieChart from "./figures/PlaytimePieChart"
 import TwoWayEnterTable from "./figures/TwoWayEnterTable"
+import NetherTree from "./figures/NetherTree"
 
 const Stats = ({ data, isSess }) => {
   return (
@@ -36,6 +37,9 @@ const Stats = ({ data, isSess }) => {
         )}
       </CollapsibleContainer>
       <CollapsibleContainer header={<h1>Nether</h1>}>
+        <Row style={{ width: "100%" }}>
+          <NetherTree netherTreeData={data.ntd} />
+        </Row>
         {data.tl.slice(4, 7).map((val, idx) =>
           <Row style={{ width: "100%" }}>
             <Col style={{ height: "300px" }} className="d-flex flex-column col-md-6 col-sm-12">

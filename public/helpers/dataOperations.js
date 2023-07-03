@@ -7,7 +7,8 @@ const hmsToMs = (h, m, s) => h * 60 * 60 * 1000 + m * 60 * 1000 + Math.round(s *
 const timeToMs = time => time.length > 0 ? hmsToMs(...time.replace("*", "").split(":")) : 0
 const isNewSession = (prev, curr, breakTime) => prev - curr - breakTime > (1000 * 60 * 60)
 const isPncakeTracker = item => "Session Marker" in item
-const mean = dist => (dist.length > 1 ? dist.reduce((acc, val) => acc + val, 0) / dist.length : 0)
+const sum = (data) => data.reduce((sum, value) => sum + value, 0)
+const mean = dist => (dist.length > 0 ? sum(dist) / dist.length : 0)
 const stdev = dist => (dist.length > 1 ? Math.sqrt(dist.reduce((acc, val) => acc + Math.pow(val - mean(dist), 2), 0) / dist.length) : 0)
 
 const processLinePlotData = (data, step) => {
@@ -15,7 +16,7 @@ const processLinePlotData = (data, step) => {
     return []
   }
   const distData = []
-  const sortedData = [...data].sort((a, b) => a - b);
+  const sortedData = [...data].sort((a, b) => a - b)
   const start = Math.min(30000, Math.floor(sortedData[Math.ceil(sortedData.length * 0.02)] / 30000) * 30000)
   const end = sortedData[Math.floor(sortedData.length * 0.98)]
   const dataRange = Array.from(Array(Math.ceil((end - start) / step)).keys(), (i) => start + i * step)
@@ -135,7 +136,7 @@ const ei = (item, types) => {
 export const doAllOps = (data, keepSessions = []) => {
   const currTimeline = {}
   // Initalize 
-  let [enterTypes, enterDist, resetCount, timePlayed, seedsPlayed, owRTA, preBlindRTA, preBlindCount] = [{}, [], 0, 0, 0, 0, 0, 0]
+  let [enterTypes, resetCount, timePlayed, seedsPlayed, owRTA, preBlindRTA, preBlindCount] = [{}, 0, 0, 0, 0, 0, 0]
 
   let biomeTypes = {
     "beach": { total: 0, sum: 0 },
@@ -174,6 +175,24 @@ export const doAllOps = (data, keepSessions = []) => {
 
   let [wallRTA, netherRTA] = [0, 0]
 
+  let netherTree = [
+    { name: "No Structures", value: 0 },
+    {
+      name: "Bastion First", children: [
+        { name: "Bast", value: 0 },
+        { name: "Bast, Fort", value: 0 },
+        { name: "Bast, Fort, Blind", value: 0 }
+      ]
+    },
+    {
+      name: "Fortress First", children: [
+        { name: "Fort", value: 0 },
+        { name: "Fort, Bast", value: 0 },
+        { name: "Fort, Bast, Blind", value: 0 }
+      ]
+    }
+  ]
+
   let prevTime = null
   let currSess = 0
   data.forEach((item, idx) => {
@@ -193,12 +212,6 @@ export const doAllOps = (data, keepSessions = []) => {
         currTimeline[tItem] = { total: 0, sum: 0, relativeTotal: 0, relativeSum: 0, preSplitRTA: 0, cDist: [], rDist: [] }
       }
       if (item[tItem].length > 0 || (tItem === "Bastion" && item["Fortress"].length > 0)) {
-        // Nether Dist Stuff
-        if (tItem === "Nether") {
-          if (timeToMs(item["Nether"]) > 0) {
-            enterDist.push(timeToMs(item["Nether"]))
-          }
-        }
         // Do structure 1, structure 2
         if (tItem === "Bastion") {
           if (!currTimeline.hasOwnProperty("Fortress")) {
@@ -215,18 +228,25 @@ export const doAllOps = (data, keepSessions = []) => {
             currTimeline["Fortress"].cDist.push(Math.max(bastTime, fortTime))
             currTimeline["Bastion"].rDist.push(Math.min(bastTime, fortTime) - lastTime)
             currTimeline["Fortress"].rDist.push(Math.abs(fortTime - bastTime))
+            if (item["Nether Exit"].length > 0) {
+              netherTree[((fortTime > bastTime) ? 1 : 2)].children[2].value += 1
+            } else {
+              netherTree[((fortTime > bastTime) ? 1 : 2)].children[1].value += 1
+            }
           } else if (bastTime > 0) {
             // Just bastion
             currTimeline["Bastion"].preSplitRTA += bastTime
             currTimeline["Fortress"].preSplitRTA += timeToMs(item["RTA"])
             currTimeline["Bastion"].cDist.push(bastTime)
             currTimeline["Bastion"].rDist.push(bastTime - lastTime)
+            netherTree[1].children[0].value += 1
           } else if (fortTime > 0) {
             // Just fortress
             currTimeline["Bastion"].preSplitRTA += fortTime
             currTimeline["Fortress"].preSplitRTA += timeToMs(item["RTA"])
             currTimeline["Bastion"].cDist.push(fortTime)
             currTimeline["Bastion"].rDist.push(fortTime - lastTime)
+            netherTree[2].children[0].value += 1
           }
         } else if (tItem != "Fortress") {
           currTimeline[tItem].preSplitRTA += timeToMs(item[tItem])
@@ -259,6 +279,8 @@ export const doAllOps = (data, keepSessions = []) => {
     }
   })
 
+  netherTree[0].value += (currTimeline["Nether"].cDist.length - currTimeline["Bastion"].cDist.length)
+
   // Average out all the data
   const finalTimeline = []
   let prevCount = resetCount
@@ -284,7 +306,6 @@ export const doAllOps = (data, keepSessions = []) => {
   const ops = {
     ot: owRTA,
     nt: netherRTA,
-    nd: processLinePlotData(enterDist, 2000),
     tl: finalTimeline,
     rc: resetCount,
     pc: seedsPlayed,
@@ -294,7 +315,8 @@ export const doAllOps = (data, keepSessions = []) => {
     et: enterTypes,
     bt: biomeTypes,
     it: ironTypes,
-    ei: enterInfo
+    ei: enterInfo,
+    ntd: netherTree
   }
 
   if (isPncakeTracker(data[0])) {
