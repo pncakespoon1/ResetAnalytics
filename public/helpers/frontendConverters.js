@@ -16,11 +16,4 @@ export const msToStr = (ms, dp = true) => {
   }
 }
 
-export const logRound = (value) => {
-  const digits = Math.floor(Math.log10(value))
-  const pow10 = Math.pow(10, digits)
-  const ret = Math.ceil(value / pow10) * pow10
-  return ret
-}
-
 export const roundToPerc = (fullNum, digits = 2) => Math.round(fullNum * (10 ** digits)) / (10 ** digits)

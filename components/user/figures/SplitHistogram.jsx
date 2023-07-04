@@ -1,10 +1,10 @@
 import { Col, Row } from "react-bootstrap"
 import { Label, Tooltip, XAxis, YAxis, ResponsiveContainer, LineChart, Line, CartesianGrid } from "recharts"
-import { msToStr, logRound } from "../../../public/helpers/frontendConverters"
+import { msToStr } from "../../../public/helpers/frontendConverters"
 
-const SplitHistogram = ({ distData }) => {
-  const yStep = (distData[distData.length - 1].count > 3 ? logRound(distData[distData.length - 1].count / 3) : 1)
-  const yTicks = Array.from(Array(4), (_, i) => i * yStep)
+const SplitHistogram = ({ data1 }) => {
+  const distData = data1.dist
+  const yTicks = data1.yTicks
 
   return (
     <>

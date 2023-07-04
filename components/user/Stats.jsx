@@ -46,13 +46,13 @@ const Stats = ({ data, isSess }) => {
             }
             {
               data.tl.slice(0, 4).map((val, idx) =>
-                val.cDist.length > 0 ? (
+                val.total > 0 ? (
                   <Row style={{ width: "100%" }}>
                     <Col style={{ height: "300px" }} className="d-flex flex-column col-md-6 col-sm-12">
                       <SplitInfo splitData={val} splitName={timelines[idx]} />
                     </Col>
                     <Col style={{ height: "300px" }} className="d-flex flex-column col-md-6 col-sm-12">
-                      <SplitHistogram distData={val.cDist} />
+                      <SplitHistogram data1={val.cDist} />
                     </Col>
                   </Row>
                 ) : null
@@ -72,13 +72,13 @@ const Stats = ({ data, isSess }) => {
                   }
                   {
                     data.tl.slice(4, 7).map((val, idx) =>
-                      val.cDist.length > 0 ? (
+                      val.total > 0 ? (
                         <Row style={{ width: "100%" }}>
                           <Col style={{ height: "300px" }} className="d-flex flex-column col-md-6 col-sm-12">
                             <SplitInfo splitData={val} splitName={timelines[idx + 4]} />
                           </Col>
                           <Col style={{ height: "300px" }} className="d-flex flex-column col-md-6 col-sm-12">
-                            <SplitHistogram distData={val.cDist} />
+                            <SplitHistogram data1={val.cDist} />
                           </Col>
                         </Row>
                       ) : null
@@ -96,13 +96,13 @@ const Stats = ({ data, isSess }) => {
                 <div>
                   {
                     data.tl.slice(7, 9).map((val, idx) =>
-                      val.cDist.length > 0 ? (
+                      val.total > 0 ? (
                         <Row style={{ width: "100%" }}>
                           <Col style={{ height: "300px" }} className="d-flex flex-column col-md-6 col-sm-12">
                             <SplitInfo splitData={val} splitName={timelines[idx + 7]} />
                           </Col>
                           <Col style={{ height: "300px" }} className="d-flex flex-column col-md-6 col-sm-12">
-                            <SplitHistogram distData={val.cDist} />
+                            <SplitHistogram data1={val.cDist} />
                           </Col>
                         </Row>
                       ) : null

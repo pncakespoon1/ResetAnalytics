@@ -11,6 +11,13 @@ const sum = (data) => data.reduce((sum, value) => sum + value, 0)
 const mean = dist => (dist.length > 0 ? sum(dist) / dist.length : 0)
 const stdev = dist => (dist.length > 1 ? Math.sqrt(dist.reduce((acc, val) => acc + Math.pow(val - mean(dist), 2), 0) / dist.length) : 0)
 
+const logRound = (value) => {
+  const digits = Math.floor(Math.log10(value))
+  const pow10 = Math.pow(10, digits)
+  const ret = Math.ceil(value / pow10) * pow10
+  return ret
+}
+
 const processLinePlotData = (data) => {
   if (data.length === 0) {
     return []
@@ -26,7 +33,9 @@ const processLinePlotData = (data) => {
     const count1 = index !== -1 ? index : sortedData.length
     distData.push({ time: num, count: count1 })
   })
-  return distData
+  const yStep = (distData[distData.length - 1].count > 3 ? logRound(distData[distData.length - 1].count / 3) : 1)
+  const yTicks = Array.from(Array(4), (_, i) => i * yStep)
+  return {dist: distData, yTicks: yTicks}
 }
 
 // Blinds per hour (preBlindCount / (preBlindRTA / 1000 / 60 / 60))
