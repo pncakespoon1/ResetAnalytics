@@ -19,7 +19,7 @@ const SplitHistogram = ({ data1 }) => {
             <Label value="Cumulative Count" offset={0} position="insideLeft" angle={-90} style={{ textAnchor: 'middle', fill: '#b2b2b2' }} />
           </YAxis>
           <Tooltip />
-          <Line type="monotone" dataKey="count" stroke="#8884d8" strokeWidth={3} dot={{ r: 2 }} />
+          <Line type="monotone" dataKey="count" stroke="#8884d8" strokeWidth={3} dot={false} />
         </LineChart>
       </ResponsiveContainer>
     </>

@@ -6,7 +6,7 @@ export const msToStr = (ms, dp = true) => {
 
 
   hours = (hours < 10) ? "0" + hours : hours;
-  minutes = (minutes < 10) ? "0" + minutes : minutes;
+  minutes = (minutes < 10 && hours !== "00") ? "0" + minutes : minutes;
   seconds = (seconds < 10) ? "0" + seconds : seconds;
 
   if (hours === "00") {
