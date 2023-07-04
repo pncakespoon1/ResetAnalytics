@@ -317,7 +317,8 @@ export const doAllOps = (data, keepSessions = []) => {
     bt: biomeTypes,
     it: ironTypes,
     ei: enterInfo,
-    ntd: netherTree
+    ntd: netherTree,
+    pn: isPncakeTracker(data[0])
   }
 
   if (isPncakeTracker(data[0])) {
