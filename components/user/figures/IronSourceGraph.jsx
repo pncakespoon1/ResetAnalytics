@@ -38,7 +38,7 @@ const IronSourceGraphs = ({ data }) => {
           <h1>Iron Source Enter Avg</h1>
           <ResponsiveContainer>
             <BarChart data={ironBarChartData} margin={{ top: 5, right: 5, bottom: 35, left: 5 }}>
-              <XAxis dataKey="name" tick={<CustomTick />} stroke="#b2b2b2"  interval={0} />
+              <XAxis dataKey="name" tick={<CustomTick />} stroke="#b2b2b2" interval={0} />
               <YAxis tickFormatter={tick => msToStr(tick)} stroke="#b2b2b2" />
               <Tooltip separator="" formatter={value => [msToStr(value), ""]} cursor={false} itemStyle={{ color: "#000000" }} labelStyle={{ color: "#000000" }} />
               <Bar dataKey="avg" fill="#ffffff">

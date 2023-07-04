@@ -38,6 +38,7 @@ const NetherTree = ({ netherTreeData }) => {
                 nameKey="name"
                 dataKey="value"
                 ratio={4 / 3}
+                isAnimationActive={false}
                 stroke="#fff"
                 fill={'#8889DD'}
                 content={props => renderContent({ ...props, colors })}
