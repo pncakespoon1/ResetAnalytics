@@ -17,7 +17,7 @@ const processLinePlotData = (data) => {
   }
   const distData = []
   const sortedData = [...data].sort((a, b) => a - b)
-  const step = 5000
+  const step = Math.max(Math.floor((sortedData[Math.floor((sortedData.length > 50 ? sortedData.length * 0.98 : sortedData.length - 1))] - sortedData[0]) / 100000) * 5000, 5000)
   const start = Math.floor(sortedData[0] / step) * step
   const end = sortedData[Math.floor((sortedData.length > 50 ? sortedData.length * 0.98 : sortedData.length - 1))]
   const dataRange = Array.from(Array((Math.ceil((end - start) / step / 8) * 8) + 1).keys(), (i) => start + i * step)
@@ -290,16 +290,16 @@ export const doAllOps = (data, keepSessions = []) => {
       finalTimeline.push({ time: 0, total: 0, tsp: 0, XPH: 0, cStdev: 0, rStdev: 0, cDist: [], rDist: [], cConv: 0, rConv: 0 })
     else
       finalTimeline.push({
-        time: mean(currTimeline[tItem].cDist),
+        time: Math.round(mean(currTimeline[tItem].cDist)),
         total: currTimeline[tItem].cDist.length,
-        tsp: mean(currTimeline[tItem].rDist),
+        tsp: Math.round(mean(currTimeline[tItem].rDist)),
         xph: (currTimeline[tItem] ? currTimeline[tItem].total / (currTimeline[tItem].preSplitRTA / 1000 / 60 / 60) : 0),
-        cStdev: stdev(currTimeline[tItem].cDist),
-        rStdev: stdev(currTimeline[tItem].rDist),
+        cStdev: Math.round(stdev(currTimeline[tItem].cDist)),
+        rStdev: Math.round(stdev(currTimeline[tItem].rDist)),
         cDist: processLinePlotData(currTimeline[tItem].cDist),
         rDist: processLinePlotData(currTimeline[tItem].rDist),
-        cConv: currTimeline[tItem].cDist.length / resetCount,
-        rConv: currTimeline[tItem].cDist.length / prevCount
+        cConv: Math.round(currTimeline[tItem].cDist.length / resetCount * 10000)/10000,
+        rConv: Math.round(currTimeline[tItem].cDist.length / prevCount * 10000)/10000
       })
     prevCount = currTimeline[tItem].cDist.length
   })
