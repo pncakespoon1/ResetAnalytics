@@ -3,21 +3,11 @@ import { ResponsiveContainer, Treemap, Tooltip } from 'recharts'
 import { colourList } from '../../../public/helpers/frontend'
 
 const NetherTree = ({ netherTreeData }) => {
-    const renderContent = ({ root, depth, x, y, width, height, index, payload, rank, name }) => {
-        if (name == "No Structures") {
-            var color = colourList[0]
-        } else if (root.name == "Bastion First") {
-            var color = colourList[1]
-        } else if (root.name == "Fortress First") {
-            var color = colourList[2]
-        }
-
-        console.log(name)
-        console.log(root)
-        console.log(depth)
+    const renderContent = ({ root, depth, x, y, width, height, index, payload, rank, name, colors }) => {
+        const color = colors[name]
         return (
             <g>
-                <rect x={x} y={y} width={width} height={height} fill={color} />
+                <rect x={x + depth * 3} y={y + depth * 3} width={Math.max(width - depth * 6, 0)} height={Math.max(height - depth * 6, 0)} fill={color} strokeWidth={0} />
                 <text
                     x={x + width / 2}
                     y={y + height / 2}
@@ -25,10 +15,19 @@ const NetherTree = ({ netherTreeData }) => {
                     dominantBaseline="central"
                     fill="#000000"
                 >
-                    {name}
+                    {((depth === 2 || name === "No Structures") && width > 0 && height > 0 ? name : "")}
                 </text>
             </g>
         )
+    }
+
+    const colors = {
+        "No Structures": colourList[0],
+        "Bastion First": colourList[1],
+        "Fortress First": colourList[2],
+        "1 Str": colourList[3],
+        "2 Str": colourList[4],
+        "Blind": colourList[5]
     }
 
 
@@ -41,7 +40,7 @@ const NetherTree = ({ netherTreeData }) => {
                 ratio={4 / 3}
                 stroke="#fff"
                 fill={'#8889DD'}
-                content={props => renderContent({ ...props })}
+                content={props => renderContent({ ...props, colors })}
             >
                 <Tooltip />
             </Treemap>

@@ -11,15 +11,16 @@ const sum = (data) => data.reduce((sum, value) => sum + value, 0)
 const mean = dist => (dist.length > 0 ? sum(dist) / dist.length : 0)
 const stdev = dist => (dist.length > 1 ? Math.sqrt(dist.reduce((acc, val) => acc + Math.pow(val - mean(dist), 2), 0) / dist.length) : 0)
 
-const processLinePlotData = (data, step) => {
-  if (data.length < 2) {
+const processLinePlotData = (data) => {
+  if (data.length === 0) {
     return []
   }
   const distData = []
   const sortedData = [...data].sort((a, b) => a - b)
-  const start = Math.min(30000, Math.floor(sortedData[Math.ceil(sortedData.length * 0.02)] / 30000) * 30000)
-  const end = sortedData[Math.floor(sortedData.length * 0.98)]
-  const dataRange = Array.from(Array(Math.ceil((end - start) / step)).keys(), (i) => start + i * step)
+  const step = 5000
+  const start = Math.floor(sortedData[0] / step) * step
+  const end = sortedData[Math.floor((sortedData.length > 50 ? sortedData.length * 0.98 : sortedData.length - 1))]
+  const dataRange = Array.from(Array((Math.ceil((end - start) / step / 8) * 8) + 1).keys(), (i) => start + i * step)
   dataRange.forEach((num, idx) => {
     const index = sortedData.findIndex((element) => element >= num)
     const count1 = index !== -1 ? index : sortedData.length
@@ -179,16 +180,16 @@ export const doAllOps = (data, keepSessions = []) => {
     { name: "No Structures", value: 0 },
     {
       name: "Bastion First", children: [
-        { name: "Bast", value: 0 },
-        { name: "Bast, Fort", value: 0 },
-        { name: "Bast, Fort, Blind", value: 0 }
+        { name: "1 Str", value: 0 },
+        { name: "2 Str", value: 0 },
+        { name: "Blind", value: 0 }
       ]
     },
     {
       name: "Fortress First", children: [
-        { name: "Fort", value: 0 },
-        { name: "Fort, Bast", value: 0 },
-        { name: "Fort, Bast, Blind", value: 0 }
+        { name: "1 Str", value: 0 },
+        { name: "2 Str", value: 0 },
+        { name: "Blind", value: 0 }
       ]
     }
   ]
@@ -295,8 +296,8 @@ export const doAllOps = (data, keepSessions = []) => {
         xph: (currTimeline[tItem] ? currTimeline[tItem].total / (currTimeline[tItem].preSplitRTA / 1000 / 60 / 60) : 0),
         cStdev: stdev(currTimeline[tItem].cDist),
         rStdev: stdev(currTimeline[tItem].rDist),
-        cDist: processLinePlotData(currTimeline[tItem].cDist, 5000),
-        rDist: processLinePlotData(currTimeline[tItem].rDist, 5000),
+        cDist: processLinePlotData(currTimeline[tItem].cDist),
+        rDist: processLinePlotData(currTimeline[tItem].rDist),
         cConv: currTimeline[tItem].cDist.length / resetCount,
         rConv: currTimeline[tItem].cDist.length / prevCount
       })

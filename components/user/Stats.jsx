@@ -31,35 +31,39 @@ const Stats = ({ data, isSess }) => {
           </Row>
         </Tab>
         <Tab eventKey="overworld" title="Overworld">
-          {
-            (
-              data.tl[3].total !== 0 ? (
-                <div>
-                  <EnterTypeGraph data={data} />
-                  <BiomeTypeGraph data={data} />
-                  <IronSourceGraph data={data} />
-                  <TwoWayEnterTable data={data} />
-                </div>
-              ) : null
-            )
-          }
-          {
-            data.tl.slice(0, 4).map((val, idx) =>
-              <Row style={{ width: "100%" }}>
-                <Col style={{ height: "300px" }} className="d-flex flex-column col-md-6 col-sm-12">
-                  <SplitInfo splitData={val} splitName={timelines[idx]} />
-                </Col>
-                <Col style={{ height: "300px" }} className="d-flex flex-column col-md-6 col-sm-12">
-                  <SplitHistogram distData={val.cDist} />
-                </Col>
-              </Row>
-            )
-          }
+          <div>
+            {
+              (
+                data.tl[3].total !== 0 ? (
+                  <div>
+                    <EnterTypeGraph data={data} />
+                    <BiomeTypeGraph data={data} />
+                    <IronSourceGraph data={data} />
+                    <TwoWayEnterTable data={data} />
+                  </div>
+                ) : null
+              )
+            }
+            {
+              data.tl.slice(0, 4).map((val, idx) =>
+                val.cDist.length > 0 ? (
+                  <Row style={{ width: "100%" }}>
+                    <Col style={{ height: "300px" }} className="d-flex flex-column col-md-6 col-sm-12">
+                      <SplitInfo splitData={val} splitName={timelines[idx]} />
+                    </Col>
+                    <Col style={{ height: "300px" }} className="d-flex flex-column col-md-6 col-sm-12">
+                      <SplitHistogram distData={val.cDist} />
+                    </Col>
+                  </Row>
+                ) : null
+              )
+            }
+          </div>
         </Tab>
-        <Tab eventKey="nether" title="Nether">
-          {
-            (
-              data.tl[3].total !== 0 ? (
+        {
+          (
+            data.tl[3].total !== 0 ? (
+              <Tab eventKey="nether" title="Nether">
                 <div>
                   {
                     <Row style={{ width: "100%" }}>
@@ -68,43 +72,47 @@ const Stats = ({ data, isSess }) => {
                   }
                   {
                     data.tl.slice(4, 7).map((val, idx) =>
-                      <Row style={{ width: "100%" }}>
-                        <Col style={{ height: "300px" }} className="d-flex flex-column col-md-6 col-sm-12">
-                          <SplitInfo splitData={val} splitName={timelines[idx + 4]} />
-                        </Col>
-                        <Col style={{ height: "300px" }} className="d-flex flex-column col-md-6 col-sm-12">
-                          <SplitHistogram distData={val.cDist} />
-                        </Col>
-                      </Row>
+                      val.cDist.length > 0 ? (
+                        <Row style={{ width: "100%" }}>
+                          <Col style={{ height: "300px" }} className="d-flex flex-column col-md-6 col-sm-12">
+                            <SplitInfo splitData={val} splitName={timelines[idx + 4]} />
+                          </Col>
+                          <Col style={{ height: "300px" }} className="d-flex flex-column col-md-6 col-sm-12">
+                            <SplitHistogram distData={val.cDist} />
+                          </Col>
+                        </Row>
+                      ) : null
                     )
                   }
                 </div>
-              ) : null
-            )
-          }
-        </Tab>
-        <Tab eventKey="endgame" title="End-game">
-          {
-            (
-              data.tl[6].total !== 0 ? (
+              </Tab>
+            ) : null
+          )
+        }
+        {
+          (
+            data.tl[6].total !== 0 ? (
+              <Tab eventKey="endgame" title="End-game">
                 <div>
                   {
                     data.tl.slice(7, 9).map((val, idx) =>
-                      <Row style={{ width: "100%" }}>
-                        <Col style={{ height: "300px" }} className="d-flex flex-column col-md-6 col-sm-12">
-                          <SplitInfo splitData={val} splitName={timelines[idx + 7]} />
-                        </Col>
-                        <Col style={{ height: "300px" }} className="d-flex flex-column col-md-6 col-sm-12">
-                          <SplitHistogram distData={val.cDist} />
-                        </Col>
-                      </Row>
+                      val.cDist.length > 0 ? (
+                        <Row style={{ width: "100%" }}>
+                          <Col style={{ height: "300px" }} className="d-flex flex-column col-md-6 col-sm-12">
+                            <SplitInfo splitData={val} splitName={timelines[idx + 7]} />
+                          </Col>
+                          <Col style={{ height: "300px" }} className="d-flex flex-column col-md-6 col-sm-12">
+                            <SplitHistogram distData={val.cDist} />
+                          </Col>
+                        </Row>
+                      ) : null
                     )
                   }
                 </div>
-              ) : null
-            )
-          }
-        </Tab>
+              </Tab>
+            ) : null
+          )
+        }
       </Tabs>
     </>
   )
