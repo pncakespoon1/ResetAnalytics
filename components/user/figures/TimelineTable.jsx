@@ -26,7 +26,7 @@ const TimelineTable = ({ data }) => {
             {data.tl.map((val, idx) => <td key={idx}>{val.total}</td>)}
           </tr>
           <tr data-tip data-for="avgs-tip">
-            {data.tl.map((val, idx) => <td key={idx}>{msToStr(val.time)}</td>)}
+            {data.tl.map((val, idx) => <td key={idx}>{val.time > 0 ? msToStr(val.time) : "-----"}</td>)}
           </tr>
         </tbody>
       </Table>

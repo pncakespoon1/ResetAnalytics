@@ -21,18 +21,32 @@ const SplitInfo = ({ splitName, splitData }) => {
                 <tbody style={{ fontFamily: "Roboto", fontSize: "1em" }}>
                     <tr data-tip data-for="cumulative">
                         <td>{roundToPerc(splitData.total)}</td>
-                        <td>{msToStr(splitData.time)}</td>
-                        <td>{msToStr(splitData.cStdev)}</td>
-                        <td>{roundToPerc(splitData.cConv * 100)}%</td>
+                        <td>{splitData.time > 0 ? msToStr(splitData.time) : "-----"}</td>
+                        <td>{splitData.cStdev > 0 ? msToStr(splitData.cStdev) : "-----"}</td>
+                        <td>{!isNaN(roundToPerc(splitData.cConv * 100)) ? `${roundToPerc(splitData.cConv * 100)}%` : "-----"}%</td>
                         <td>{roundToPerc(splitData.xph)}</td>
                     </tr>
-                    <tr data-tip data-for="relative" style={{ color: "#888" }}>
-                        <td></td>
-                        <td>{msToStr(splitData.tsp)}</td>
-                        <td>{msToStr(splitData.rStdev)}</td>
-                        <td>{roundToPerc(splitData.rConv * 100)}%</td>
-                        <td></td>
-                    </tr>
+                    {
+                        (
+                            (splitName === "Iron") ? (
+                                <tr data-tip data-for="relative" style={{ color: "#888" }}>
+                                    <td></td>
+                                    <td>-----</td>
+                                    <td>-----</td>
+                                    <td>-----</td>
+                                    <td></td>
+                                </tr>
+                            ) : (
+                                <tr data-tip data-for="relative" style={{ color: "#888" }}>
+                                    <td></td>
+                                    <td>{splitData.tsp > 0 ? msToStr(splitData.tsp) : "-----"}</td>
+                                    <td>{splitData.rStdev > 0 ? msToStr(splitData.rStdev) : "-----"}</td>
+                                    <td>{!isNaN(roundToPerc(splitData.rConv * 100)) ? `${roundToPerc(splitData.rConv * 100)}%` : "-----"}</td>
+                                    <td></td>
+                                </tr>
+                            )
+                        )
+                    }
                 </tbody>
             </Table>
         </>
