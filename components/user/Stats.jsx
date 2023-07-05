@@ -13,7 +13,7 @@ import PlaytimePieChart from "./figures/PlaytimePieChart"
 import TwoWayEnterTable from "./figures/TwoWayEnterTable"
 import NetherTree from "./figures/NetherTree"
 
-const Stats = ({ data, isSess }) => {
+const Stats = ({ data }) => {
   return (
     <>
       <Tabs transition={false}>
@@ -22,7 +22,7 @@ const Stats = ({ data, isSess }) => {
             <TimelineTable data={data} />
           </Row>
           <Row style={{ width: "100%" }}>
-            <GeneralExtraStats data={data} isSess={isSess} />
+            <GeneralExtraStats data={data} />
           </Row>
           <Row style={{ width: "100%" }}>
             <Col style={{ height: "300px" }} className="d-flex flex-column col-md-6 col-sm-12">

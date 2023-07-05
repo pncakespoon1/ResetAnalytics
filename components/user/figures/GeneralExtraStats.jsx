@@ -1,7 +1,7 @@
 import { Table } from "react-bootstrap"
 import { msToStr, roundToPerc } from "../../../public/helpers/frontendConverters"
 
-const GeneralExtraStats = ({ data, isSess }) => {
+const GeneralExtraStats = ({ data }) => {
   return (
     <>
       <h1 className="display-2">Additional Analytics</h1>
