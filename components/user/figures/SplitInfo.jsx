@@ -23,7 +23,7 @@ const SplitInfo = ({ splitName, splitData }) => {
                         <td>{roundToPerc(splitData.total)}</td>
                         <td>{splitData.time > 0 ? msToStr(splitData.time) : "-----"}</td>
                         <td>{splitData.cStdev > 0 ? msToStr(splitData.cStdev) : "-----"}</td>
-                        <td>{!isNaN(roundToPerc(splitData.cConv * 100)) ? `${roundToPerc(splitData.cConv * 100)}%` : "-----"}%</td>
+                        <td>{!isNaN(roundToPerc(splitData.cConv * 100)) ? `${roundToPerc(splitData.cConv * 100)}%` : "-----"}</td>
                         <td>{roundToPerc(splitData.xph)}</td>
                     </tr>
                     {

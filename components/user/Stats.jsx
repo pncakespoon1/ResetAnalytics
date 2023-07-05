@@ -25,7 +25,7 @@ const Stats = ({ data, isSess }) => {
             <GeneralExtraStats data={data} isSess={isSess} />
           </Row>
           <Row style={{ width: "100%" }}>
-            <Col style={{ height: "300px" }}>
+            <Col style={{ height: "300px" }} className="d-flex flex-column col-md-6 col-sm-12">
               <PlaytimePieChart data={data} />
             </Col>
           </Row>

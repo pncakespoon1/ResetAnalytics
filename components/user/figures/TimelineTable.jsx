@@ -14,8 +14,8 @@ const TimelineTable = ({ data }) => {
             <th>Wood</th>
             <th>Iron Pickaxe</th>
             <th>Nether</th>
-            <th>Structure #1</th>
-            <th>Structure #2</th>
+            <th>Structure 1</th>
+            <th>Structure 2</th>
             <th>Nether Exit</th>
             <th>Stronghold</th>
             <th>End</th>
