@@ -22,7 +22,7 @@ const PlaytimePieChart = ({ data }) => {
     <>
       <h1>Playtime Breakdown</h1>
       <ResponsiveContainer>
-        <PieChart width={300} height={250} className="mx-auto">
+        <PieChart className="mx-auto">
           <Pie
             dataKey="percOfTotal"
             isAnimationActive={true}

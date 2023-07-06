@@ -16,31 +16,48 @@ import NetherTree from "./figures/NetherTree"
 const Stats = ({ data }) => {
   return (
     <>
-      <Tabs transition={false}>
+      <Tabs transition={false} style={{ width: "1000px" }}>
         <Tab eventKey="overview" title="Overview">
           <Row style={{ width: "100%" }}>
-            <TimelineTable data={data} />
-          </Row>
-          <Row style={{ width: "100%" }}>
-            <GeneralExtraStats data={data} />
-          </Row>
-          <Row style={{ width: "100%" }}>
-            <Col style={{ height: "300px" }} className="d-flex flex-column col-md-6 col-sm-12">
-              <PlaytimePieChart data={data} />
+            <Col style={{ height: "200px" }} className="d-flex flex-column col-md-12 col-sm-12">
+              <TimelineTable data={data} />
             </Col>
           </Row>
+          <Row style={{ width: "100%" }}>
+            <Col style={{ height: "150px" }} className="d-flex flex-column col-md-12 col-sm-12">
+              <GeneralExtraStats data={data} />
+            </Col>
+          </Row>
+          {
+            (
+              data.pn ? (
+                <Row style={{ width: "100%" }}>
+                  <Col style={{ height: "300px" }} className="d-flex flex-column col-md-6 col-sm-12">
+                    <PlaytimePieChart data={data} />
+                  </Col>
+                </Row>
+              ) : null
+            )
+          }
         </Tab>
         <Tab eventKey="overworld" title="Overworld">
           <div>
             {
               (
                 data.tl[3].total !== 0 ? (
-                  <div>
-                    <EnterTypeGraph data={data} />
-                    <BiomeTypeGraph data={data} />
-                    <IronSourceGraph data={data} />
-                    <TwoWayEnterTable data={data} />
-                  </div>
+                  data.pn ? (
+                    <div>
+                      <EnterTypeGraph data={data} />
+                      <BiomeTypeGraph data={data} />
+                      <IronSourceGraph data={data} />
+                      <TwoWayEnterTable data={data} />
+                    </div>
+                  ) : (
+                    <div>
+                      <EnterTypeGraph data={data} />
+                      <BiomeTypeGraph data={data} />
+                    </div>
+                  )
                 ) : null
               )
             }

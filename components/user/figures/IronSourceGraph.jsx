@@ -34,7 +34,7 @@ const IronSourceGraphs = ({ data }) => {
   return (
     <>
       <Row style={{ width: "100%" }}>
-        <Col style={{ height: "350px" }} className="d-flex flex-column col-md-6 col-sm-12">
+        <Col style={{ height: "300px" }} className="d-flex flex-column col-md-6 col-sm-12">
           <h1>Iron Source Enter Avg</h1>
           <ResponsiveContainer>
             <BarChart data={ironBarChartData} margin={{ top: 5, right: 5, bottom: 35, left: 5 }}>
@@ -52,7 +52,7 @@ const IronSourceGraphs = ({ data }) => {
         <Col style={{ height: "300px" }} className="d-flex flex-column col-md-6 col-sm-12">
           <h1>Iron Source Percentage</h1>
           <ResponsiveContainer>
-            <PieChart width={300} height={250} className="mx-auto">
+            <PieChart className="mx-auto">
               <Pie
                 dataKey="percOfTotal"
                 isAnimationActive={true}

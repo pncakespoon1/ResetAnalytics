@@ -32,7 +32,7 @@ const NetherTree = ({ netherTreeData }) => {
 
 
     return (
-        <ResponsiveContainer width="100%" height={300}>
+        <ResponsiveContainer>
             <Treemap
                 style={{ fontFamily: "Roboto" }}
                 data={netherTreeData}

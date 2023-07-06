@@ -10,7 +10,7 @@ const SplitHistogram = ({ data1 }) => {
     <>
       <h1>Split Distribution</h1>
       <ResponsiveContainer>
-        <LineChart width={500} height={250} data={distData} margin={{ top: 10, right: 10, bottom: 40, left: 5 }}>
+        <LineChart data={distData} margin={{ top: 10, right: 10, bottom: 40, left: 5 }}>
           <CartesianGrid strokeDasharray="3 3" />
           <XAxis dataKey="time" tick={{ angle: 80, textAnchor: "start", dx: 0 }} stroke="#b2b2b2" tickFormatter={value => msToStr(value, false)} interval={Math.floor(distData.length / 8) - 1} >
             <Label value="Time" offset={-25} position="insideBottom" style={{ textAnchor: 'middle', fill: '#b2b2b2' }} />

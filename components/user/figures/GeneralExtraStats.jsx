@@ -4,7 +4,6 @@ import { msToStr, roundToPerc } from "../../../public/helpers/frontendConverters
 const GeneralExtraStats = ({ data }) => {
   return (
     <>
-      <h1 className="display-2">Additional Analytics</h1>
       <Table className="mb-4" style={{ fontSize: "1.35em" }} responsive bordered hover variant="light">
         <thead>
           <tr>
