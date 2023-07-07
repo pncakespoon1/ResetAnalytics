@@ -84,7 +84,9 @@ const Stats = ({ data }) => {
                 <div>
                   {
                     <Row style={{ width: "100%" }}>
-                      <NetherTree netherTreeData={data.ntd} />
+                      <Col style={{ height: "300px" }} className="d-flex flex-column col-md-12 col-sm-12">
+                        <NetherTree netherTreeData={data.ntd} />
+                      </Col>
                     </Row>
                   }
                   {
