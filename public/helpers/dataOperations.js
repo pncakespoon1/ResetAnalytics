@@ -269,6 +269,7 @@ export const doAllOps = (data, keepSessions = []) => {
       } else {
         currTimeline[tItem].preSplitRTA += timeToMs(item["RTA"])
       }
+      currTimeline[tItem].preSplitRTA += timeToMs(item["RTA Since Prev"]) + (isPncakeTracker(item) ? wallTime(item) : 0)
     })
 
     // Data operations
