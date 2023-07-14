@@ -1,7 +1,17 @@
 // Wants:
 // Graph session stats over time 
 
+import IronSourceGraphs from "../../components/user/figures/IronSourceGraph"
+
 const timelines = ["Iron", "Wood", "Iron Pickaxe", "Nether", "Bastion", "Fortress", "Nether Exit", "Stronghold", "End"]
+const ironTypeList = [
+  "Buried Treasure w/ tnt",
+  "Buried Treasure",
+  "Full Shipwreck",
+  "Half Shipwreck",
+  "Village",
+  "other"
+]
 
 const hmsToMs = (h, m, s) => h * 60 * 60 * 1000 + m * 60 * 1000 + Math.round(s * 1000)
 const timeToMs = time => time.length > 0 ? hmsToMs(...time.replace("*", "").split(":")) : 0
@@ -35,7 +45,7 @@ const processLinePlotData = (data) => {
   })
   const yStep = (distData[distData.length - 1].count > 3 ? logRound(distData[distData.length - 1].count / 3) : 1)
   const yTicks = Array.from(Array(4), (_, i) => i * yStep)
-  return {dist: distData, yTicks: yTicks}
+  return { dist: distData, yTicks: yTicks }
 }
 
 // Blinds per hour (preBlindCount / (preBlindRTA / 1000 / 60 / 60))
@@ -146,7 +156,7 @@ const ei = (item, types) => {
 export const doAllOps = (data, keepSessions = []) => {
   const currTimeline = {}
   // Initalize 
-  let [enterTypes, resetCount, timePlayed, seedsPlayed, owRTA, preBlindRTA, preBlindCount] = [{}, 0, 0, 0, 0, 0, 0]
+  let [ironMosaicData, enterTypes, resetCount, timePlayed, seedsPlayed, owRTA, preBlindRTA, preBlindCount] = [[], {}, 0, 0, 0, 0, 0, 0]
 
   let biomeTypes = {
     "beach": { total: 0, sum: 0 },
@@ -180,6 +190,18 @@ export const doAllOps = (data, keepSessions = []) => {
       "Bucketless": { total: 0, sum: 0 },
       "Obsidian": { total: 0, sum: 0 }
     }
+
+    ironMosaicData.push(
+      {
+        name: ironType,
+        value: 0,
+        children: [
+          { name: "reset", value: 0 },
+          { name: "pick", value: 0 },
+          { name: "enter", value: 0 }
+        ]
+      }
+    )
   }
 
 
@@ -288,9 +310,27 @@ export const doAllOps = (data, keepSessions = []) => {
     if (isPncakeTracker(data[0])) {
       wallRTA += wallTime(item)
     }
+
+    if (item["Iron"].length > 0) {
+      if (item["Nether"].length > 0) {
+        ironMosaicData[ironTypeList.indexOf((item["Iron Source"]) in ironTypes ? (item["Iron Source"]) : "other")].children[2].value += 1
+      } else if (item["Iron Pickaxe"].length > 0) {
+        ironMosaicData[ironTypeList.indexOf((item["Iron Source"]) in ironTypes ? (item["Iron Source"]) : "other")].children[1].value += 1
+      } else {
+        ironMosaicData[ironTypeList.indexOf((item["Iron Source"]) in ironTypes ? (item["Iron Source"]) : "other")].children[0].value += 1
+      }
+    }
   })
 
   netherTree[0].value += (currTimeline["Nether"].cDist.length - currTimeline["Bastion"].cDist.length)
+
+  ironMosaicData.forEach((element, idx1) => {
+    const total = sum([element.children[0].value, element.children[1].value, element.children[2].value])
+    ironMosaicData[idx1].value = Math.floor(10000 * total / currTimeline["Iron"].cDist.length) / 10000
+    element.children.forEach((subElement, idx2) => {
+      ironMosaicData[idx1].children[idx2].value = Math.floor(10000 * ironMosaicData[idx1].children[idx2].value / (total == 0 ? 1 : total)) / 10000
+    })
+  })
 
   // Average out all the data
   const finalTimeline = []
@@ -308,8 +348,8 @@ export const doAllOps = (data, keepSessions = []) => {
         rStdev: Math.round(stdev(currTimeline[tItem].rDist)),
         cDist: processLinePlotData(currTimeline[tItem].cDist),
         rDist: processLinePlotData(currTimeline[tItem].rDist),
-        cConv: Math.round(currTimeline[tItem].cDist.length / resetCount * 10000)/10000,
-        rConv: Math.round(currTimeline[tItem].cDist.length / prevCount * 10000)/10000
+        cConv: Math.round(currTimeline[tItem].cDist.length / resetCount * 10000) / 10000,
+        rConv: Math.round(currTimeline[tItem].cDist.length / prevCount * 10000) / 10000
       })
     prevCount = currTimeline[tItem].cDist.length
   })
@@ -328,7 +368,8 @@ export const doAllOps = (data, keepSessions = []) => {
     it: ironTypes,
     ei: enterInfo,
     ntd: netherTree,
-    pn: isPncakeTracker(data[0])
+    pn: isPncakeTracker(data[0]),
+    imd: ironMosaicData
   }
 
   if (isPncakeTracker(data[0])) {

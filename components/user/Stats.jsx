@@ -12,6 +12,7 @@ import SplitHistogram from "./figures/SplitHistogram"
 import PlaytimePieChart from "./figures/PlaytimePieChart"
 import TwoWayEnterTable from "./figures/TwoWayEnterTable"
 import NetherTree from "./figures/NetherTree"
+import IronSourceMosaic from "./figures/ironSourceMosaic"
 
 const Stats = ({ data }) => {
   return (
@@ -47,6 +48,11 @@ const Stats = ({ data }) => {
                 data.tl[3].total !== 0 ? (
                   data.pn ? (
                     <div>
+                      <Row style={{ width: "100%" }}>
+                        <Col style={{ height: "300px" }} className="d-flex flex-column col-md-12 col-sm-12">
+                          <IronSourceMosaic data={data.imd} />
+                        </Col>
+                      </Row>
                       <EnterTypeGraph data={data} />
                       <BiomeTypeGraph data={data} />
                       <IronSourceGraph data={data} />
