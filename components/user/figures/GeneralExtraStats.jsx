@@ -7,7 +7,8 @@ const GeneralExtraStats = ({ data }) => {
       <Table className="mb-4" style={{ fontSize: "1.35em" }} responsive bordered hover variant="light">
         <thead>
           <tr>
-            <th>Nethers/Hr</th>
+            <th>RNPH</th>
+            <th>FNPH</th>
             <th>Blinds/Hr</th>
             <th>Resets</th>
             <th>Playtime</th>
@@ -18,7 +19,8 @@ const GeneralExtraStats = ({ data }) => {
         </thead>
         <tbody style={{ fontFamily: "Roboto", fontSize: "1em" }}>
           <tr>
-            <td>{roundToPerc(data.nph)}</td>
+            <td>{roundToPerc(data.rnph)}</td>
+            <td>{roundToPerc(data.fnph)}</td>
             <td>{roundToPerc(data.bph)}</td>
             <td>{data.rc}</td>
             <td>{msToStr(data.tp)}</td>
