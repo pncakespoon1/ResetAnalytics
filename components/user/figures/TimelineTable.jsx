@@ -1,12 +1,10 @@
 import { Col, Row } from "react-bootstrap"
 import { Table } from "react-bootstrap"
 import { msToStr, roundToPerc } from "../../../public/helpers/frontendConverters"
-import { MainStatsToolTips } from "../../Tooltips"
 
 const TimelineTable = ({ data }) => {
   return (
     <>
-      <MainStatsToolTips />
       <Table className="mb-4" style={{ fontSize: "1.35em" }} responsive bordered hover variant="light">
         <thead>
           <tr>
@@ -22,10 +20,10 @@ const TimelineTable = ({ data }) => {
           </tr>
         </thead>
         <tbody style={{ fontFamily: "Roboto", fontSize: "1em" }}>
-          <tr data-tip data-for="totals-tip" style={{ fontSize: "0.9em" }}>
+          <tr style={{ fontSize: "0.9em" }}>
             {data.tl.map((val, idx) => <td key={idx}>{val.total}</td>)}
           </tr>
-          <tr data-tip data-for="avgs-tip">
+          <tr>
             {data.tl.map((val, idx) => <td key={idx}>{val.time > 0 ? msToStr(val.time) : "-----"}</td>)}
           </tr>
         </tbody>

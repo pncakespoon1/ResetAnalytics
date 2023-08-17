@@ -1,20 +1,31 @@
 import { Table } from "react-bootstrap"
 import { msToStr, roundToPerc } from "../../../public/helpers/frontendConverters"
+import { GeneralExtraStatsTooltips } from "../../Tooltips"
 
 const GeneralExtraStats = ({ data }) => {
+  const names = [
+    "RNPH",
+    "FNPH",
+    "Blinds/Hr",
+    "Resets",
+    "Playtime",
+    "Time Per Played",
+    "Resets Per Enter",
+    "Seeds Played"
+  ]
   return (
     <>
+      <GeneralExtraStatsTooltips />
       <Table className="mb-4" style={{ fontSize: "1.35em" }} responsive bordered hover variant="light">
         <thead>
           <tr>
-            <th>RNPH</th>
-            <th>FNPH</th>
-            <th>Blinds/Hr</th>
-            <th>Resets</th>
-            <th>Playtime</th>
-            <th>Time Per Played</th>
-            <th>Resets Per Enter</th>
-            <th>Seeds Played</th>
+            {
+              names.map((name, idx) => (
+                <th key={idx} data-tip data-for={name}>
+                  {name}
+                </th>
+              ))
+            }
           </tr>
         </thead>
         <tbody style={{ fontFamily: "Roboto", fontSize: "1em" }}>
