@@ -12,7 +12,7 @@ import SplitHistogram from "./figures/SplitHistogram"
 import PlaytimePieChart from "./figures/PlaytimePieChart"
 import TwoWayEnterTable from "./figures/TwoWayEnterTable"
 import NetherTree from "./figures/NetherTree"
-import IronSourceMosaic from "./figures/ironSourceMosaic"
+import IronSourceMosaic from "./figures/IronSourceMosaic"
 
 const Stats = ({ data }) => {
   return (
