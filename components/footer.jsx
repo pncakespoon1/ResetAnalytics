@@ -1,7 +1,7 @@
 const Footer = () => (
   <>
     <p className="mb-0" style={{bottom: "0", left: "0", right: "0"}}>
-      Compatible only with my <a href="https://github.com/Specnr/ResetTracker/releases/latest" style={{textDecoration: "none"}}>Reset Tracker</a>
+      Compatible with <a href="https://github.com/Specnr/ResetTracker/releases/latest" style={{textDecoration: "none"}}>My Reset Tracker</a> or <a href="https://github.com/pncakespoon1/ResetTracker/releases/latest" style={{textDecoration: "none"}}>Pncake's Reset Tracker</a>
     </p>
     <p className="mb-0" style={{bottom: "0", left: "0", right: "0"}}>
       Made with <span style={{color: "red"}}>❤</span> by Specnr
