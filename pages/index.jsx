@@ -25,6 +25,7 @@ const Home = () => {
   return (
     <>
       <BadSearchModal show={showModal} onHide={() => setShowModal(false)} />
+      <Row style={{minHeight: "20vh"}} />
       <Row style={{minHeight: "25vh"}}>
         <Col>
           <h1 style={{fontSize: "12vh"}}>
