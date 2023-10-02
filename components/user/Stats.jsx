@@ -14,19 +14,19 @@ import TwoWayEnterTable from "./figures/TwoWayEnterTable"
 import NetherTree from "./figures/NetherTree"
 import IronSourceMosaic from "./figures/IronSourceMosaic"
 
-const Stats = ({ data }) => {
+const Stats = ({ data, data2 = null }) => {
   return (
     <>
       <Tabs transition={false} style={{ width: "1000px" }}>
         <Tab eventKey="overview" title="Overview">
           <Row style={{ width: "100%", margin: "0px" }}>
             <Col style={{ height: "200px", padding: "0px" }} className="d-flex flex-column col-md-12 col-sm-12">
-              <TimelineTable data={data} />
+              <TimelineTable data={data} data2={data2} />
             </Col>
           </Row>
           <Row style={{ width: "100%", margin: "0px" }}>
             <Col style={{ height: "150px", padding: "0px" }} className="d-flex flex-column col-md-12 col-sm-12">
-              <GeneralExtraStats data={data} />
+              <GeneralExtraStats data={data} data2={data2} />
             </Col>
           </Row>
           {
@@ -34,7 +34,7 @@ const Stats = ({ data }) => {
               data.pn ? (
                 <Row style={{ width: "100%", margin: "0px" }}>
                   <Col style={{ height: "300px", padding: "0px" }} className="d-flex flex-column col-md-6 col-sm-12">
-                    <PlaytimePieChart data={data} />
+                    <PlaytimePieChart data={data} data2={data2} />
                   </Col>
                 </Row>
               ) : null
@@ -45,23 +45,27 @@ const Stats = ({ data }) => {
           <div>
             {
               (
-                data.tl[3].total !== 0 ? (
+                data.tl[3].total !== 0 && (data2 == null || data2.tl[3].total !== 0) ? (
                   data.pn ? (
                     <div>
-                      <EnterTypeGraph data={data} />
-                      <BiomeTypeGraph data={data} />
-                      <IronSourceGraph data={data} />
-                      <TwoWayEnterTable data={data} />
-                      <Row style={{ width: "100%", margin: "0px" }}>
-                        <Col style={{ height: "300px", padding: "0px" }} className="d-flex flex-column col-md-12 col-sm-12">
-                          <IronSourceMosaic data={data.imd} />
-                        </Col>
-                      </Row>
+                      <EnterTypeGraph data={data} data2={data2} />
+                      <BiomeTypeGraph data={data} data2={data2} />
+                      <IronSourceGraph data={data} data2={data2} />
+                      <TwoWayEnterTable data={data} data2={data2} />
+                      {
+                        data2 != null ? null : (
+                          <Row style={{ width: "100%", margin: "0px" }}>
+                            <Col style={{ height: "300px", padding: "0px" }} className="d-flex flex-column col-md-12 col-sm-12">
+                              <IronSourceMosaic data={data.imd} />
+                            </Col>
+                          </Row>
+                        )
+                      }
                     </div>
                   ) : (
                     <div>
-                      <EnterTypeGraph data={data} />
-                      <BiomeTypeGraph data={data} />
+                      <EnterTypeGraph data={data} data2={data2} />
+                      <BiomeTypeGraph data={data} data2={data2} />
                     </div>
                   )
                 ) : null
@@ -69,13 +73,13 @@ const Stats = ({ data }) => {
             }
             {
               data.tl.slice(0, 4).map((val, idx) =>
-                val.total > 0 ? (
+                val.total > 0 && (data2 == null || data2.tl[idx].total > 0) ? (
                   <Row style={{ width: "100%", margin: "0px" }}>
                     <Col style={{ height: "300px", padding: "0px" }} className="d-flex flex-column col-md-6 col-sm-12">
-                      <SplitInfo splitData={val} splitName={timelines[idx]} />
+                      <SplitInfo splitData={val} splitName={timelines[idx]} splitData2={data2 == null ? null : data2.tl[idx]} />
                     </Col>
                     <Col style={{ height: "300px", padding: "0px" }} className="d-flex flex-column col-md-6 col-sm-12">
-                      <SplitHistogram data1={val.cDist} />
+                      <SplitHistogram data1={val.cDist} data2={data2 == null ? null : data2.tl[idx].cDist}/>
                     </Col>
                   </Row>
                 ) : null
@@ -85,29 +89,31 @@ const Stats = ({ data }) => {
         </Tab>
         {
           (
-            data.tl[3].total !== 0 ? (
+            data.tl[3].total !== 0 && (data2 == null || data2.tl[3].total !== 0) ? (
               <Tab eventKey="nether" title="Nether">
                 <div>
                   {
                     data.tl.slice(4, 7).map((val, idx) =>
-                      val.total > 0 ? (
+                      val.total > 0 && (data2 == null || data2.tl[idx].total > 0) ? (
                         <Row style={{ width: "100%", margin: "0px" }}>
                           <Col style={{ height: "300px", padding: "0px" }} className="d-flex flex-column col-md-6 col-sm-12">
-                            <SplitInfo splitData={val} splitName={timelines[idx + 4]} />
+                            <SplitInfo splitData={val} splitName={timelines[idx + 4]} splitData2={data2 == null ? null : data2.tl[idx + 4]} />
                           </Col>
                           <Col style={{ height: "300px", padding: "0px" }} className="d-flex flex-column col-md-6 col-sm-12">
-                            <SplitHistogram data1={val.cDist} />
+                            <SplitHistogram data1={val.cDist} data2={data2 == null ? null : data2.tl[idx + 4].cDist} />
                           </Col>
                         </Row>
                       ) : null
                     )
                   }
                   {
-                    <Row style={{ width: "100%", margin: "0px" }}>
-                      <Col style={{ height: "350px", padding: "0px" }} className="d-flex flex-column col-md-12 col-sm-12">
-                        <NetherTree netherTreeData={data.ntd} />
-                      </Col>
-                    </Row>
+                    data2 != null ? null : (
+                      <Row style={{ width: "100%", margin: "0px" }}>
+                        <Col style={{ height: "350px", padding: "0px" }} className="d-flex flex-column col-md-12 col-sm-12">
+                          <NetherTree netherTreeData={data.ntd} />
+                        </Col>
+                      </Row>
+                    )
                   }
                 </div>
               </Tab>
@@ -116,18 +122,18 @@ const Stats = ({ data }) => {
         }
         {
           (
-            data.tl[7].total !== 0 ? (
+            data.tl[7].total !== 0 && (data2 == null || data2.tl[7].total !== 0) ? (
               <Tab eventKey="endgame" title="End-game">
                 <div>
                   {
                     data.tl.slice(7, 9).map((val, idx) =>
-                      val.total > 0 ? (
+                      val.total > 0 && (data2 == null || data2.tl[idx].total > 0) ? (
                         <Row style={{ width: "100%", margin: "0px" }}>
                           <Col style={{ height: "300px", padding: "0px" }} className="d-flex flex-column col-md-6 col-sm-12">
-                            <SplitInfo splitData={val} splitName={timelines[idx + 7]} />
+                            <SplitInfo splitData={val} splitName={timelines[idx + 7]} splitData2={data2 == null ? null : data2.tl[idx + 7]} />
                           </Col>
                           <Col style={{ height: "300px", padding: "0px" }} className="d-flex flex-column col-md-6 col-sm-12">
-                            <SplitHistogram data1={val.cDist} />
+                            <SplitHistogram data1={val.cDist} data2={data2 == null ? null : data2.tl[idx + 7].cDist}/>
                           </Col>
                         </Row>
                       ) : null
